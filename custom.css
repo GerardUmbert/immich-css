@@ -183,6 +183,10 @@ main > #asset-grid {
   margin: 0;
   border-radius: 9999px;
 }
+/* the transparent background above would also win over Immich's hover color */
+#account-info-panel > div > a[href$='/auth/logout']:hover {
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
 
 /* Search filter panel (lib/components/shared-components/search-bar/SearchFilters.svelte):
  * @immich/ui outline buttons draw their border in the exact text color
