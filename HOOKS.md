@@ -1,9 +1,9 @@
 # Hook map
 
-Generated from `hooks.json` by `node tools/hooks.mjs docs`. Do not edit by hand. Checked against Immich **v3.3.1**.
+Generated from `hooks.json` by `node tools/hooks.mjs docs`. Do not edit by hand. Checked against Immich **v3.3.1** and @immich/ui **0.90.0**.
 
 Each entry says what a group of rules does, why it exists, which selectors it relies on, and which upstream files those selectors come from.
-After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to list the entries whose upstream files changed.
+After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and `node tools/hooks.mjs check-ui <oldVer> <newVer>` (@immich/ui) to list the entries whose files changed.
 
 ## colors
 
@@ -11,8 +11,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Pure #fff / #000 backgrounds are unwanted. Immich hard-codes them in a few places.
 - **CSS section:** colors
 - **Selectors:** `--immich-ui-light (full color, not a triplet)`, `--immich-bg / --immich-dark-bg (RGB triplets)`, `--color-white / --color-black (Tailwind theme vars)`, `html.dark:root / html.light:root`
-- **Upstream files** (under `web/src`): `app.css`, `app.html`
-- **Also depends on:** @immich/ui theme/default.css (defines --immich-ui-light per theme)
+- **Immich files** (under `web/src`): `app.css`, `app.html`
+- **@immich/ui files** (under `dist`): `theme/default.css`
 - **Verified:** source + runtime (pure-black strip on search page traced to app.html)
 
 ## accent
@@ -21,8 +21,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Lets the purple / pale blue accent be changed from one value.
 - **CSS section:** accent color
 - **Selectors:** `--immich-primary`, `--immich-dark-primary`, `--immich-ui-primary-50..950`
-- **Upstream files** (under `web/src`): `app.css`
-- **Also depends on:** @immich/ui theme/default.css (primary shade scale)
+- **Immich files** (under `web/src`): `app.css`
+- **@immich/ui files** (under `dist`): `theme/default.css`
 - **Verified:** source only (shown once in a running instance, then reverted)
 
 ## photo-grid
@@ -31,7 +31,7 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Softer look; photos zoom slightly on hover.
 - **CSS section:** timeline
 - **Selectors:** `[data-image-grid]`, `[data-asset-id]`, `:has(> [data-thumbnail-focus-container])`
-- **Upstream files** (under `web/src`): `lib/components/timeline/AssetLayout.svelte`, `lib/components/assets/thumbnail/Thumbnail.svelte`, `lib/components/shared-components/gallery-viewer/GalleryViewer.svelte`
+- **Immich files** (under `web/src`): `lib/components/timeline/AssetLayout.svelte`, `lib/components/assets/thumbnail/Thumbnail.svelte`, `lib/components/shared-components/gallery-viewer/GalleryViewer.svelte`
 - **Verified:** source + runtime (pasted timeline markup)
 
 ## selection-bar
@@ -40,8 +40,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Replace the solid gray pill.
 - **CSS section:** timeline (Selection / control bar)
 - **Selectors:** `#control-bar > nav`
-- **Upstream files** (under `web/src`): `lib/components/shared-components/ControlAppBar.svelte`
-- **Also depends on:** @immich/ui ControlBar (the <nav>)
+- **Immich files** (under `web/src`): `lib/components/shared-components/ControlAppBar.svelte`
+- **@immich/ui files** (under `dist`): `components/ControlBar/ControlBar.svelte`
 - **Verified:** source only
 
 ## scroll-behind-bar
@@ -50,17 +50,17 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Top padding sat outside the scroller and clipped content.
 - **CSS section:** timeline (Timeline scroll area, Album / person / partner / shared pages)
 - **Selectors:** `div:has(> #asset-grid)`, `#asset-grid`, `main:has(> #asset-grid)`, `main > #asset-grid`
-- **Upstream files** (under `web/src`): `lib/components/timeline/Timeline.svelte`, `lib/components/layouts/UserPageLayout.svelte`, `lib/components/album-page/AlbumViewer.svelte`, `routes/(user)/albums/[albumId=id]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/partners/[userId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`
+- **Immich files** (under `web/src`): `lib/components/timeline/Timeline.svelte`, `lib/components/layouts/UserPageLayout.svelte`, `lib/components/album-page/AlbumViewer.svelte`, `routes/(user)/albums/[albumId=id]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/partners/[userId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`
 - **Verified:** source + runtime (main page and album screenshots)
 
 ## account-menu
 
 - **What:** Solid off-white account panel, pill-shaped Sign Out
-- **Why:** Remove the gray box, white cards and hard 4px gap.
+- **Why:** Remove the gray box, white cards and hard 4px gap. Immich's focusTrap action inserts sentinel <div>s as first and last children, so child-position selectors (:first-child / :last-child) hit those instead of the real content.
 - **CSS section:** Account menu
 - **Selectors:** `#account-info-panel`, `#account-info-panel > div:has(figure)`, `#account-info-panel > div > a[href$='/auth/logout']`
-- **Upstream files** (under `web/src`): `lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte`
-- **Also depends on:** @immich/ui focus-trap action (adds sentinel <div>s at runtime, which is why child-position selectors failed)
+- **Immich files** (under `web/src`): `lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte`, `lib/actions/focus-trap.ts`
+- **@immich/ui files** (under `dist`): `internal/Button.svelte`, `components/IconButton/IconButton.svelte`
 - **Verified:** source + runtime (outerHTML pasted from a v3.3.1 server)
 
 ## search-buttons (fragile)
@@ -69,8 +69,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** @immich/ui outline buttons draw the border in the exact text color.
 - **CSS section:** Search filter panel
 - **Selectors:** `[role='listbox'] button[class*='border-dark']`
-- **Upstream files** (under `web/src`): `lib/components/shared-components/search-bar/SearchFilters.svelte`, `lib/components/shared-components/search-bar/SearchButton.svelte`
-- **Also depends on:** @immich/ui internal Button (border-dark class)
+- **Immich files** (under `web/src`): `lib/components/shared-components/search-bar/SearchFilters.svelte`, `lib/components/shared-components/search-bar/SearchButton.svelte`
+- **@immich/ui files** (under `dist`): `internal/Button.svelte`
 - **Verified:** source only
 
 ## people
@@ -79,7 +79,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Cleaner people page; same grow effect as explore avatars.
 - **CSS section:** people
 - **Selectors:** `#people-card`, `div:has(> #people-card)`, `#people-card + input[type='text']`, `#people-card a > div:has(> button)`, `div:has(> div > #people-card) (grid)`
-- **Upstream files** (under `web/src`): `routes/(user)/people/PeopleCard.svelte`, `routes/(user)/people/+page.svelte`, `routes/(user)/people/PeopleInfiniteScroll.svelte`
+- **Immich files** (under `web/src`): `routes/(user)/people/PeopleCard.svelte`, `routes/(user)/people/+page.svelte`, `routes/(user)/people/PeopleInfiniteScroll.svelte`
+- **@immich/ui files** (under `dist`): `components/ContextMenu/ContextMenuButton.svelte`, `internal/Button.svelte`
 - **Verified:** source only
 
 ## album-card-button
@@ -88,7 +89,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Consistency between albums and people.
 - **CSS section:** people (menu button)
 - **Selectors:** `[data-testid='context-button-parent'] button`
-- **Upstream files** (under `web/src`): `lib/components/album-page/AlbumCard.svelte`
+- **Immich files** (under `web/src`): `lib/components/album-page/AlbumCard.svelte`
+- **@immich/ui files** (under `dist`): `components/ContextMenu/ContextMenuButton.svelte`, `internal/Button.svelte`
 - **Verified:** source only
 
 ## places-explore-tiles (fragile)
@@ -97,7 +99,7 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Hover feedback; name overlaid on the cover.
 - **CSS section:** places/explore, people (explore page avatars)
 - **Selectors:** `a:has(> div.brightness-75)`, `a[href*='/people/']:not(#people-card *)`
-- **Upstream files** (under `web/src`): `routes/(user)/explore/+page.svelte`, `routes/(user)/places/PlacesCardGroup.svelte`
+- **Immich files** (under `web/src`): `routes/(user)/explore/+page.svelte`, `routes/(user)/places/PlacesCardGroup.svelte`
 - **Verified:** source only
 
 ## sidebar
@@ -106,8 +108,8 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** User and admin menus looked different; items were flush left.
 - **CSS section:** sidebar
 - **Selectors:** `#sidebar`, `div:has(> div > div > div > a[href='/admin/users']) (admin menu has no id)`
-- **Upstream files** (under `web/src`): `lib/components/sidebar/Sidebar.svelte`, `lib/components/layouts/AdminPageLayout.svelte`, `lib/components/shared-components/side-bar/UserSidebar.svelte`, `lib/components/shared-components/side-bar/RecentAlbums.svelte`
-- **Also depends on:** @immich/ui NavbarItem, AppShellSidebar, Scrollable
+- **Immich files** (under `web/src`): `lib/components/sidebar/Sidebar.svelte`, `lib/components/layouts/AdminPageLayout.svelte`, `lib/components/shared-components/side-bar/UserSidebar.svelte`, `lib/components/shared-components/side-bar/RecentAlbums.svelte`
+- **@immich/ui files** (under `dist`): `components/Navbar/NavbarItem.svelte`, `components/AppShell/AppShellSidebar.svelte`, `components/Scrollable/Scrollable.svelte`
 - **Verified:** source only (left scrollbar and unified spacing not yet confirmed in a running instance)
 
 ## map
@@ -116,7 +118,7 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** Match the glass style; hide attribution.
 - **CSS section:** map
 - **Selectors:** `.maplibregl-canvas`, `.maplibregl-ctrl-bottom-left / -right`, `.maplibregl-map .maplibregl-ctrl-group`, `.maplibregl-marker div / img`
-- **Upstream files** (under `web/src`): `lib/components/shared-components/map/Map.svelte`
+- **Immich files** (under `web/src`): `lib/components/shared-components/map/Map.svelte`
 - **Also depends on:** maplibre-gl and svelte-maplibre-gl (marker DOM is generated there)
 - **Verified:** unverified (marker DOM not inspected; reported as different from the source)
 
@@ -126,5 +128,5 @@ After an Immich update, run `node tools/hooks.mjs check <oldRef> <newRef>` to li
 - **Why:** The default scrollbars have a hard solid track.
 - **CSS section:** scrollbars
 - **Selectors:** `html::-webkit-scrollbar*`, `.immich-scrollbar`
-- **Upstream files** (under `web/src`): `app.css`
+- **Immich files** (under `web/src`): `app.css`
 - **Verified:** source only

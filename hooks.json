@@ -13,21 +13,36 @@
         "--color-white / --color-black (Tailwind theme vars)",
         "html.dark:root / html.light:root"
       ],
-      "upstream": ["app.css", "app.html"],
-      "external": ["@immich/ui theme/default.css (defines --immich-ui-light per theme)"],
+      "upstream": [
+        "app.css",
+        "app.html"
+      ],
+      "external": [],
       "verified": "source + runtime (pure-black strip on search page traced to app.html)",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "theme/default.css"
+      ]
     },
     {
       "id": "accent",
       "what": "Optional accent color switch (off by default)",
       "why": "Lets the purple / pale blue accent be changed from one value.",
       "css": "accent color",
-      "hooks": ["--immich-primary", "--immich-dark-primary", "--immich-ui-primary-50..950"],
-      "upstream": ["app.css"],
-      "external": ["@immich/ui theme/default.css (primary shade scale)"],
+      "hooks": [
+        "--immich-primary",
+        "--immich-dark-primary",
+        "--immich-ui-primary-50..950"
+      ],
+      "upstream": [
+        "app.css"
+      ],
+      "external": [],
       "verified": "source only (shown once in a running instance, then reverted)",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "theme/default.css"
+      ]
     },
     {
       "id": "photo-grid",
@@ -46,25 +61,38 @@
       ],
       "external": [],
       "verified": "source + runtime (pasted timeline markup)",
-      "fragile": false
+      "fragile": false,
+      "ui": []
     },
     {
       "id": "selection-bar",
       "what": "Frosted-glass selection / control bar",
       "why": "Replace the solid gray pill.",
       "css": "timeline (Selection / control bar)",
-      "hooks": ["#control-bar > nav"],
-      "upstream": ["lib/components/shared-components/ControlAppBar.svelte"],
-      "external": ["@immich/ui ControlBar (the <nav>)"],
+      "hooks": [
+        "#control-bar > nav"
+      ],
+      "upstream": [
+        "lib/components/shared-components/ControlAppBar.svelte"
+      ],
+      "external": [],
       "verified": "source only",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "components/ControlBar/ControlBar.svelte"
+      ]
     },
     {
       "id": "scroll-behind-bar",
       "what": "Photos scroll up behind the top bar instead of being cut off",
       "why": "Top padding sat outside the scroller and clipped content.",
       "css": "timeline (Timeline scroll area, Album / person / partner / shared pages)",
-      "hooks": ["div:has(> #asset-grid)", "#asset-grid", "main:has(> #asset-grid)", "main > #asset-grid"],
+      "hooks": [
+        "div:has(> #asset-grid)",
+        "#asset-grid",
+        "main:has(> #asset-grid)",
+        "main > #asset-grid"
+      ],
       "upstream": [
         "lib/components/timeline/Timeline.svelte",
         "lib/components/layouts/UserPageLayout.svelte",
@@ -75,36 +103,49 @@
       ],
       "external": [],
       "verified": "source + runtime (main page and album screenshots)",
-      "fragile": false
+      "fragile": false,
+      "ui": []
     },
     {
       "id": "account-menu",
       "what": "Solid off-white account panel, pill-shaped Sign Out",
-      "why": "Remove the gray box, white cards and hard 4px gap.",
+      "why": "Remove the gray box, white cards and hard 4px gap. Immich's focusTrap action inserts sentinel <div>s as first and last children, so child-position selectors (:first-child / :last-child) hit those instead of the real content.",
       "css": "Account menu",
       "hooks": [
         "#account-info-panel",
         "#account-info-panel > div:has(figure)",
         "#account-info-panel > div > a[href$='/auth/logout']"
       ],
-      "upstream": ["lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte"],
-      "external": ["@immich/ui focus-trap action (adds sentinel <div>s at runtime, which is why child-position selectors failed)"],
+      "upstream": [
+        "lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte",
+        "lib/actions/focus-trap.ts"
+      ],
+      "external": [],
       "verified": "source + runtime (outerHTML pasted from a v3.3.1 server)",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "internal/Button.svelte",
+        "components/IconButton/IconButton.svelte"
+      ]
     },
     {
       "id": "search-buttons",
       "what": "Softer borders on search filter buttons",
       "why": "@immich/ui outline buttons draw the border in the exact text color.",
       "css": "Search filter panel",
-      "hooks": ["[role='listbox'] button[class*='border-dark']"],
+      "hooks": [
+        "[role='listbox'] button[class*='border-dark']"
+      ],
       "upstream": [
         "lib/components/shared-components/search-bar/SearchFilters.svelte",
         "lib/components/shared-components/search-bar/SearchButton.svelte"
       ],
-      "external": ["@immich/ui internal Button (border-dark class)"],
+      "external": [],
       "verified": "source only",
-      "fragile": true
+      "fragile": true,
+      "ui": [
+        "internal/Button.svelte"
+      ]
     },
     {
       "id": "people",
@@ -125,32 +166,48 @@
       ],
       "external": [],
       "verified": "source only",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "components/ContextMenu/ContextMenuButton.svelte",
+        "internal/Button.svelte"
+      ]
     },
     {
       "id": "album-card-button",
       "what": "Album card menu button uses the glass pill from people cards",
       "why": "Consistency between albums and people.",
       "css": "people (menu button)",
-      "hooks": ["[data-testid='context-button-parent'] button"],
-      "upstream": ["lib/components/album-page/AlbumCard.svelte"],
+      "hooks": [
+        "[data-testid='context-button-parent'] button"
+      ],
+      "upstream": [
+        "lib/components/album-page/AlbumCard.svelte"
+      ],
       "external": [],
       "verified": "source only",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "components/ContextMenu/ContextMenuButton.svelte",
+        "internal/Button.svelte"
+      ]
     },
     {
       "id": "places-explore-tiles",
       "what": "Places / explore tiles zoom and un-dim; explore person avatars zoom",
       "why": "Hover feedback; name overlaid on the cover.",
       "css": "places/explore, people (explore page avatars)",
-      "hooks": ["a:has(> div.brightness-75)", "a[href*='/people/']:not(#people-card *)"],
+      "hooks": [
+        "a:has(> div.brightness-75)",
+        "a[href*='/people/']:not(#people-card *)"
+      ],
       "upstream": [
         "routes/(user)/explore/+page.svelte",
         "routes/(user)/places/PlacesCardGroup.svelte"
       ],
       "external": [],
       "verified": "source only",
-      "fragile": true
+      "fragile": true,
+      "ui": []
     },
     {
       "id": "sidebar",
@@ -167,9 +224,14 @@
         "lib/components/shared-components/side-bar/UserSidebar.svelte",
         "lib/components/shared-components/side-bar/RecentAlbums.svelte"
       ],
-      "external": ["@immich/ui NavbarItem, AppShellSidebar, Scrollable"],
+      "external": [],
       "verified": "source only (left scrollbar and unified spacing not yet confirmed in a running instance)",
-      "fragile": false
+      "fragile": false,
+      "ui": [
+        "components/Navbar/NavbarItem.svelte",
+        "components/AppShell/AppShellSidebar.svelte",
+        "components/Scrollable/Scrollable.svelte"
+      ]
     },
     {
       "id": "map",
@@ -182,21 +244,33 @@
         ".maplibregl-map .maplibregl-ctrl-group",
         ".maplibregl-marker div / img"
       ],
-      "upstream": ["lib/components/shared-components/map/Map.svelte"],
-      "external": ["maplibre-gl and svelte-maplibre-gl (marker DOM is generated there)"],
+      "upstream": [
+        "lib/components/shared-components/map/Map.svelte"
+      ],
+      "external": [
+        "maplibre-gl and svelte-maplibre-gl (marker DOM is generated there)"
+      ],
       "verified": "unverified (marker DOM not inspected; reported as different from the source)",
-      "fragile": false
+      "fragile": false,
+      "ui": []
     },
     {
       "id": "scrollbars",
       "what": "Slim rounded page scrollbar, muted thumbs elsewhere",
       "why": "The default scrollbars have a hard solid track.",
       "css": "scrollbars",
-      "hooks": ["html::-webkit-scrollbar*", ".immich-scrollbar"],
-      "upstream": ["app.css"],
+      "hooks": [
+        "html::-webkit-scrollbar*",
+        ".immich-scrollbar"
+      ],
+      "upstream": [
+        "app.css"
+      ],
       "external": [],
       "verified": "source only",
-      "fragile": true
+      "fragile": true,
+      "ui": []
     }
-  ]
+  ],
+  "uiVersion": "0.90.0"
 }

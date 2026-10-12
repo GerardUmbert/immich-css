@@ -35,15 +35,30 @@ Served by GitHub Pages: the URL never changes and updates go live about a minute
 
 ## After an Immich update
 
-Written and checked against Immich **v3.3.1**. Rules hook onto the web UI's source, but some of the DOM is added at runtime (for example, focus-trap helper elements inside popups), so a rule that looks right in the source can still miss in the browser. `HOOKS.md` maps every group of rules to its purpose, its selectors and the upstream files they come from. It is generated from `hooks.json`. To see which rules an update could affect, fetch the new release into the local clone (`git -C immich fetch --depth 1 origin tag <tag>`) and run:
+Written and checked against Immich **v3.3.1** and `@immich/ui` **0.90.0**. The rules hook onto the web UI's source, and the HTML the browser ends up with can differ from the templates (scripts in the source add elements at runtime, such as the focus-trap helper `<div>`s in popups), so a rule that looks right in the source can still miss. Inspect the real element when in doubt.
+
+`HOOKS.md` maps every group of rules to its purpose, its selectors and the upstream files they come from. It is generated from `hooks.json`.
+
+### Keeping track of upstream changes
+
+The upstream sources live in two git-ignored folders next to the CSS: `immich/` (the Immich repo) and `ui/<version>/` (the published `@immich/ui` package). Recreate them on any machine with:
 
 ```
-node tools/hooks.mjs check <oldRef> <newRef>
+node tools/hooks.mjs setup
 ```
 
-It lists only the rules whose upstream files changed, with their selectors, so you know what to re-inspect. External packages (`@immich/ui`, maplibre) aren't covered; compare their versions by hand.
+After a new release comes out:
 
-When something looks off after an update:
+```
+git -C immich fetch --depth 1 origin tag <newTag>
+node tools/hooks.mjs check <oldTag> <newTag>        # Immich files the rules depend on
+node tools/hooks.mjs ui-version <newTag>            # which @immich/ui version it pins
+node tools/hooks.mjs check-ui <oldVer> <newVer>     # @immich/ui files the rules depend on
+```
+
+Each command lists only the rule groups whose files changed, with their selectors, so you know what to re-inspect. Maplibre (map marker markup) isn't covered; compare its version by hand. When everything is checked, update `checkedAgainst` / `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.
+
+### When something looks off
 
 1. Open the page, right-click the element, **Inspect**, and compare its markup with the rule's selector in `custom.css`.
 2. Check the "FRAGILE HOOKS" list at the bottom of `custom.css` first. Those depend on Tailwind or library class names.
@@ -55,4 +70,4 @@ When something looks off after an update:
    - the account menu and sidebar (user and admin)
    - the map (markers and controls), in light and dark mode
 
-`immich/` is a local clone of the upstream source used for reference only and is not tracked.
+`immich/` and `ui/` are reference copies of upstream code and are not tracked.
