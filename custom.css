@@ -46,6 +46,13 @@
   --immich-ui-light: rgb(20 20 20);
   --immich-dark-bg: 20 20 20;
 }
+/* web/src/app.html hard-codes the <html> background to pure black / pure white
+ * (anti-flash style) and it shows wherever the body doesn't cover, e.g. behind the
+ * fixed bar on the search page. Use the surface color instead. */
+html.dark:root,
+html.light:root {
+  background-color: var(--immich-ui-light);
+}
 /* web/src/app.css: viewer background */
 body.asset-viewer-open {
   background-color: rgb(20 20 20);
