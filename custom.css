@@ -85,6 +85,16 @@ body.asset-viewer-open {
   box-shadow: var(--c-glass-shadow);
 }
 
+/* Timeline scroll area: the wrapper around #asset-grid has p-2 (8px) on top, so
+ * photos were clipped 8px below the navbar instead of scrolling up to it. Move
+ * that 8px inside the scroller so it scrolls with the content. */
+div:has(> #asset-grid) {
+  padding-top: 0;
+}
+#asset-grid {
+  padding-top: 0.5rem;
+}
+
 /* ------------------------------------------------------------------ people
  * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
  * Its parent wrapper and the name <input> are siblings/parents in
