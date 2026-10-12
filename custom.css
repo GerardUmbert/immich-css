@@ -355,6 +355,7 @@ a:has(> div.brightness-75) > span {
   border-top: none;
 }
 .maplibregl-marker div {
+  border: 2px solid var(--c-ring);
   background-color: rgb(255 255 255 / 0.4);
   backdrop-filter: var(--c-glass-blur);
   color: white;
