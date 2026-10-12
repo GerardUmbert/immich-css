@@ -58,6 +58,10 @@ node tools/hooks.mjs check-ui <oldVer> <newVer>     # @immich/ui files the rules
 
 Each command lists only the rule groups whose files changed, with their selectors, so you know what to re-inspect. Maplibre (map marker markup) isn't covered; compare its version by hand. When everything is checked, update `checkedAgainst` / `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.
 
+### Automatic weekly check
+
+A GitHub Action (`.github/workflows/upstream-check.yml`) runs every Monday. If Immich has published a stable release newer than `checkedAgainst` in `hooks.json`, it runs the checks above and opens an issue titled "Immich <tag> released: review CSS hooks", listing the rule groups to re-check. It opens at most one issue per release and does nothing when you're up to date. You can also run it by hand from the Actions tab (with optional tags to compare, and a dry-run switch that only prints the report). It only compares source files, so it can't see runtime-generated markup; the checklist below still applies.
+
 ### When something looks off
 
 1. Open the page, right-click the element, **Inspect**, and compare its markup with the rule's selector in `custom.css`.
