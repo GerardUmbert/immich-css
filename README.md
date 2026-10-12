@@ -35,7 +35,15 @@ Served by GitHub Pages: the URL never changes and updates go live about a minute
 
 ## After an Immich update
 
-Written and checked against Immich **v3.3.1**. Rules hook onto the web UI's source, but some of the DOM is added at runtime (for example, focus-trap helper elements inside popups), so a rule that looks right in the source can still miss in the browser. When something looks off after an update:
+Written and checked against Immich **v3.3.1**. Rules hook onto the web UI's source, but some of the DOM is added at runtime (for example, focus-trap helper elements inside popups), so a rule that looks right in the source can still miss in the browser. `HOOKS.md` maps every group of rules to its purpose, its selectors and the upstream files they come from. It is generated from `hooks.json`. To see which rules an update could affect, fetch the new release into the local clone (`git -C immich fetch --depth 1 origin tag <tag>`) and run:
+
+```
+node tools/hooks.mjs check <oldRef> <newRef>
+```
+
+It lists only the rules whose upstream files changed, with their selectors, so you know what to re-inspect. External packages (`@immich/ui`, maplibre) aren't covered; compare their versions by hand.
+
+When something looks off after an update:
 
 1. Open the page, right-click the element, **Inspect**, and compare its markup with the rule's selector in `custom.css`.
 2. Check the "FRAGILE HOOKS" list at the bottom of `custom.css` first. Those depend on Tailwind or library class names.
