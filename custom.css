@@ -85,6 +85,58 @@ body.asset-viewer-open {
   box-shadow: var(--c-glass-shadow);
 }
 
+/* ------------------------------------------------------------------ navbar
+ * Top navbar becomes frosted glass and photos scroll behind it instead of being
+ * cut off below it. Only touches pages built with UserPageLayout.svelte
+ * (a <header> holding #dashboard-navbar, followed by a grid that holds #sidebar).
+ *  - navbar: fixed overlay (z 2: above the sidebar's z 1, below the selection bar's z 2
+ *    which comes later in the DOM)
+ *  - the grid under it loses its own stacking context and its navbar-sized offset
+ *  - the scrolling area gets the navbar height as top padding, so the first row
+ *    still starts below the navbar at scroll 0
+ */
+:root {
+  --c-nav-h: var(--navbar-height);
+}
+@media (width < 767px) {
+  :root {
+    --c-nav-h: var(--navbar-height-md);
+  }
+}
+
+header:has(> #dashboard-navbar):has(+ div > #sidebar) > #dashboard-navbar {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 2;
+  width: 100%;
+  background-color: color-mix(in srgb, var(--immich-ui-light) 55%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+}
+header:has(> #dashboard-navbar) + div:has(> #sidebar) {
+  height: 100dvh;
+  z-index: auto;
+}
+header:has(> #dashboard-navbar) + div > #sidebar {
+  padding-top: calc(var(--c-nav-h) + 2rem);
+}
+/* plain scrolling pages */
+header:has(> #dashboard-navbar) + div > main > div:first-child:not(:has(+ div)):not(:has(#asset-grid)) {
+  padding-top: calc(var(--c-nav-h) + 0.5rem);
+}
+/* timeline pages: the timeline is its own scroller (#asset-grid) */
+header:has(> #dashboard-navbar) + div > main #asset-grid {
+  padding-top: calc(var(--c-nav-h) - 0.5rem);
+}
+/* pages with a title bar: push title bar and scroller down by the navbar */
+header:has(> #dashboard-navbar) + div > main > div + div {
+  top: var(--c-nav-h);
+}
+header:has(> #dashboard-navbar) + div > main > div:has(+ div) {
+  top: calc(4rem + var(--c-nav-h));
+  height: calc(100% - 4rem - var(--c-nav-h));
+}
+
 /* ------------------------------------------------------------------ people
  * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
  * Its parent wrapper and the name <input> are siblings/parents in
