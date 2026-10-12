@@ -313,6 +313,16 @@ div:has(> div > div > div > a[href='/admin/users']) > div:last-child {
   border-radius: 9999px;
 }
 
+/* Scrollbar on the left side of the menus: the scroll container is made
+ * right-to-left (that moves the scrollbar), its children are reset to
+ * left-to-right so nothing inside is mirrored. */
+:is(#sidebar, div:has(> div > div > div > a[href='/admin/users'])) {
+  direction: rtl;
+}
+:is(#sidebar, div:has(> div > div > div > a[href='/admin/users'])) > * {
+  direction: ltr;
+}
+
 /* ---------------------------------------------------------- places/explore
  * Place tiles: a link whose first child is the dimmed image
  * (routes/(user)/explore/+page.svelte, routes/(user)/places/PlacesCardGroup.svelte).
