@@ -59,15 +59,18 @@ body.asset-viewer-open {
   border-radius: var(--c-radius-day);
   overflow: clip;
 }
-[data-asset-id] {
+/* Photo slot: the timeline's [data-asset-id], or any wrapper directly around a
+ * Thumbnail (data-thumbnail-focus-container), which also covers search results,
+ * albums, etc. (GalleryViewer.svelte). */
+:is([data-asset-id], :has(> [data-thumbnail-focus-container])) {
   border-radius: var(--c-radius-thumb);
   overflow: hidden;
 }
-[data-asset-id] img {
+:is([data-asset-id], :has(> [data-thumbnail-focus-container])) img {
   transition: transform var(--c-ease);
 }
 @media (hover: hover) {
-  [data-asset-id]:hover img {
+  :is([data-asset-id], :has(> [data-thumbnail-focus-container])):hover img {
     transform: scale(var(--c-zoom));
   }
 }
@@ -225,7 +228,7 @@ a:has(> div.brightness-75) > span {
  */
 
 @media (prefers-reduced-motion: reduce) {
-  [data-asset-id] img,
+  :is([data-asset-id], :has(> [data-thumbnail-focus-container])) img,
   #people-card,
   #people-card + input[type='text'],
   a[href*='/people/'] > div:first-child,
