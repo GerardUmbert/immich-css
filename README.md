@@ -33,4 +33,18 @@ Served by GitHub Pages: the URL never changes and updates go live about a minute
 - Rules hook onto ids, `data-*` attributes and library class names where possible, with a comment naming the upstream file each one depends on.
 - A few rules depend on Tailwind classes and break more easily after Immich updates. They are listed under "FRAGILE HOOKS" at the bottom of `custom.css`. Check there first if something stops working.
 
+## After an Immich update
+
+Written and checked against Immich **v3.3.1**. Rules hook onto the web UI's source, but some of the DOM is added at runtime (for example, focus-trap helper elements inside popups), so a rule that looks right in the source can still miss in the browser. When something looks off after an update:
+
+1. Open the page, right-click the element, **Inspect**, and compare its markup with the rule's selector in `custom.css`.
+2. Check the "FRAGILE HOOKS" list at the bottom of `custom.css` first. Those depend on Tailwind or library class names.
+3. Walk through the pages that carry the most rules:
+   - timeline (photo grid, hover zoom, scrolling behind the top bar)
+   - an album page (menu button, scrolling behind the bar)
+   - `/people` (cards, names, grid) and `/explore`
+   - the search page and its filter panel (button borders, bar)
+   - the account menu and sidebar (user and admin)
+   - the map (markers and controls), in light and dark mode
+
 `immich/` is a local clone of the upstream source used for reference only and is not tracked.
