@@ -139,6 +139,17 @@ ACCENT-END */
   border: 1px solid var(--c-glass-border);
   box-shadow: var(--c-glass-shadow);
 }
+/* Pages with a timeline scrubber (the date strip on the right, 60px wide on desktop,
+ * lib/components/timeline/Scrubber.svelte) run it the full height of the page, so it
+ * sat on top of the bar's right-hand buttons. Keep the bar clear of the strip. */
+:root {
+  --c-scrubber-w: 60px;
+}
+@media (hover: hover) and (pointer: fine) {
+  body:has(#asset-grid) #control-bar {
+    padding-inline-end: calc(var(--c-scrubber-w) + 0.5rem);
+  }
+}
 
 /* Timeline scroll area: the wrapper around #asset-grid has p-2 (8px) on top, so
  * photos were clipped 8px below the navbar instead of scrolling up to it. Move

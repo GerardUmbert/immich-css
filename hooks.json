@@ -91,7 +91,8 @@
         "div:has(> #asset-grid)",
         "#asset-grid",
         "main:has(> #asset-grid)",
-        "main > #asset-grid"
+        "main > #asset-grid",
+        "body:has(#asset-grid) #control-bar (keeps the bar clear of the scrubber strip)"
       ],
       "upstream": [
         "lib/components/timeline/Timeline.svelte",
@@ -99,7 +100,9 @@
         "lib/components/album-page/AlbumViewer.svelte",
         "routes/(user)/albums/[albumId=id]/[[photos=photos]]/[[assetId=id]]/+page.svelte",
         "routes/(user)/partners/[userId]/[[photos=photos]]/[[assetId=id]]/+page.svelte",
-        "routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte"
+        "routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte",
+        "lib/components/timeline/Scrubber.svelte",
+        "lib/components/shared-components/ControlAppBar.svelte"
       ],
       "external": [],
       "verified": "source + runtime (main page and album screenshots)",

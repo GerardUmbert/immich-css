@@ -49,8 +49,8 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **What:** Photos scroll up behind the top bar instead of being cut off
 - **Why:** Top padding sat outside the scroller and clipped content.
 - **CSS section:** timeline (Timeline scroll area, Album / person / partner / shared pages)
-- **Selectors:** `div:has(> #asset-grid)`, `#asset-grid`, `main:has(> #asset-grid)`, `main > #asset-grid`
-- **Immich files** (under `web/src`): `lib/components/timeline/Timeline.svelte`, `lib/components/layouts/UserPageLayout.svelte`, `lib/components/album-page/AlbumViewer.svelte`, `routes/(user)/albums/[albumId=id]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/partners/[userId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`
+- **Selectors:** `div:has(> #asset-grid)`, `#asset-grid`, `main:has(> #asset-grid)`, `main > #asset-grid`, `body:has(#asset-grid) #control-bar (keeps the bar clear of the scrubber strip)`
+- **Immich files** (under `web/src`): `lib/components/timeline/Timeline.svelte`, `lib/components/layouts/UserPageLayout.svelte`, `lib/components/album-page/AlbumViewer.svelte`, `routes/(user)/albums/[albumId=id]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/partners/[userId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `lib/components/timeline/Scrubber.svelte`, `lib/components/shared-components/ControlAppBar.svelte`
 - **Verified:** source + runtime (main page and album screenshots)
 
 ## account-menu
