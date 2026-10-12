@@ -52,10 +52,9 @@ body.asset-viewer-open {
 }
 
 /* ------------------------------------------------------------ accent color
- * DISABLED by default (Immich's own purple / pale blue stays). To try another
- * accent, delete the two marker lines (ACCENT-START / ACCENT-END) around the
- * block below and edit --c-accent (light mode) and --c-accent-dark (dark mode),
- * both `R G B` triplets (sample values: pastel orange).
+ * ENABLED (pastel orange). Edit --c-accent (light mode) and --c-accent-dark
+ * (dark mode), both `R G B` triplets. To go back to Immich's own purple / pale
+ * blue, wrap the two rules below in a comment or delete them.
  *
  * Immich has two sets of accent variables and both must be set:
  *  - legacy:  --immich-primary / --immich-dark-primary (RGB triplets)
@@ -65,7 +64,6 @@ body.asset-viewer-open {
  * The shades are derived from the base color by mixing with white / black.
  * Note: white text on filled accent buttons gets hard to read with light accents.
  */
-/* ACCENT-START
 :root {
   --c-accent: 244 162 97;
   --c-accent-dark: 244 180 130;
@@ -97,7 +95,6 @@ body.asset-viewer-open {
   --immich-ui-primary-100: color-mix(in oklab, rgb(var(--c-accent-dark)) 18%, black);
   --immich-ui-primary-50: color-mix(in oklab, rgb(var(--c-accent-dark)) 12%, black);
 }
-ACCENT-END */
 
 /* ---------------------------------------------------------------- timeline
  * [data-image-grid] = one day group (AssetLayout.svelte), rounds its 4 corners.
