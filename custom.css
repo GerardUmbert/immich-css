@@ -159,8 +159,8 @@ main > #asset-grid {
 
 /* Account menu (navbar avatar): lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte
  * One solid panel in the page surface color instead of a gray box holding white
- * cards; the sign-out row is separated from the profile card by a 1px line, not a
- * 4px gap. For a frosted look, use the commented-out lines below. */
+ * cards, with a pill-shaped sign-out button. For a frosted look, use the
+ * commented-out lines below. */
 #account-info-panel {
   background-color: var(--immich-ui-light);
   /* background-color: color-mix(in srgb, var(--immich-ui-light) 60%, transparent); */
@@ -171,16 +171,11 @@ main > #asset-grid {
 #account-info-panel > div:has(figure) {
   background-color: transparent;
 }
-/* the divider lives on the wrapper of "Sign Out" + support link, so the button
- * itself is a plain pill (same radius on every corner) */
-#account-info-panel > div:has(> a[href$='/auth/logout']) {
-  margin-inline: 1rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
-}
+/* "Sign Out": a plain pill (same radius on every corner), inset so it is about
+ * as wide as the buttons above it, no divider line */
 #account-info-panel > div > a[href$='/auth/logout'] {
   background-color: transparent;
-  margin: 0;
+  margin: 0 3rem;
   border-radius: 9999px;
 }
 /* the transparent background above would also win over Immich's hover color */
