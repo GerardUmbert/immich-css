@@ -314,6 +314,7 @@ a:has(> div.brightness-75) > span {
  * Depend on Tailwind classes in upstream templates. If something stops
  * working after an update, look here first.
  *   - a:has(> div.brightness-75)   places/explore tiles (see section above)
+ *   - button[class*='border-dark'] search panel buttons (@immich/ui secondary outline)
  */
 
 @media (prefers-reduced-motion: reduce) {
