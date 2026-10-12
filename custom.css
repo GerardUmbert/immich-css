@@ -121,11 +121,14 @@ ACCENT-END */
   border-radius: var(--c-radius-thumb);
   overflow: hidden;
 }
-:is([data-asset-id], :has(> [data-thumbnail-focus-container])) img {
+/* img AND video: hovering a video thumbnail swaps the still image for a <video>
+ * (VideoThumbnail.svelte, also used for live photos); if only the img zoomed, the
+ * picture would jump back to 100% when the video starts. */
+:is([data-asset-id], :has(> [data-thumbnail-focus-container])) :is(img, video) {
   transition: transform var(--c-ease);
 }
 @media (hover: hover) {
-  :is([data-asset-id], :has(> [data-thumbnail-focus-container])):hover img {
+  :is([data-asset-id], :has(> [data-thumbnail-focus-container])):hover :is(img, video) {
     transform: scale(var(--c-zoom));
   }
 }
@@ -525,7 +528,7 @@ html::-webkit-scrollbar-thumb:hover {
  */
 
 @media (prefers-reduced-motion: reduce) {
-  :is([data-asset-id], :has(> [data-thumbnail-focus-container])) img,
+  :is([data-asset-id], :has(> [data-thumbnail-focus-container])) :is(img, video),
   #people-card,
   #people-card + input[type='text'],
   a[href*='/people/'] > div:first-child,

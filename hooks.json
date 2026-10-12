@@ -93,12 +93,14 @@
       "hooks": [
         "[data-image-grid]",
         "[data-asset-id]",
-        ":has(> [data-thumbnail-focus-container])"
+        ":has(> [data-thumbnail-focus-container])",
+        ":is(img, video) inside the slot (video thumbnails swap img for <video> on hover)"
       ],
       "upstream": [
         "lib/components/timeline/AssetLayout.svelte",
         "lib/components/assets/thumbnail/Thumbnail.svelte",
-        "lib/components/shared-components/gallery-viewer/GalleryViewer.svelte"
+        "lib/components/shared-components/gallery-viewer/GalleryViewer.svelte",
+        "lib/components/assets/thumbnail/VideoThumbnail.svelte"
       ],
       "external": [],
       "verified": "source + runtime (pasted timeline markup)",
@@ -119,6 +121,11 @@
           "file": "lib/components/assets/thumbnail/Thumbnail.svelte",
           "match": "data-thumbnail-focus-container",
           "means": "thumbnail root hook (search and album grids)"
+        },
+        {
+          "file": "lib/components/assets/thumbnail/VideoThumbnail.svelte",
+          "match": "<video",
+          "means": "video thumbnails still use a <video> element that replaces the still image on hover (it must zoom like the img)"
         }
       ]
     },

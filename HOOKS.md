@@ -39,12 +39,13 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **What:** Rounded day groups and photos, hover zoom (timeline, search, albums, galleries)
 - **Why:** Softer look; photos zoom slightly on hover.
 - **CSS section:** timeline
-- **Selectors:** `[data-image-grid]`, `[data-asset-id]`, `:has(> [data-thumbnail-focus-container])`
-- **Immich files** (under `web/src`): `lib/components/timeline/AssetLayout.svelte`, `lib/components/assets/thumbnail/Thumbnail.svelte`, `lib/components/shared-components/gallery-viewer/GalleryViewer.svelte`
+- **Selectors:** `[data-image-grid]`, `[data-asset-id]`, `:has(> [data-thumbnail-focus-container])`, `:is(img, video) inside the slot (video thumbnails swap img for <video> on hover)`
+- **Immich files** (under `web/src`): `lib/components/timeline/AssetLayout.svelte`, `lib/components/assets/thumbnail/Thumbnail.svelte`, `lib/components/shared-components/gallery-viewer/GalleryViewer.svelte`, `lib/components/assets/thumbnail/VideoThumbnail.svelte`
 - **Assumptions checked by `anchors`:**
   - day group container hook (`lib/components/timeline/AssetLayout.svelte`)
   - photo slot hook (`lib/components/timeline/AssetLayout.svelte`)
   - thumbnail root hook (search and album grids) (`lib/components/assets/thumbnail/Thumbnail.svelte`)
+  - video thumbnails still use a <video> element that replaces the still image on hover (it must zoom like the img) (`lib/components/assets/thumbnail/VideoThumbnail.svelte`)
 - **Verified:** source + runtime (pasted timeline markup)
 
 ## navbar-search
