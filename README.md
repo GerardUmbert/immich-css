@@ -18,6 +18,7 @@ Served by GitHub Pages: the URL never changes and updates go live about a minute
 - **Accent color (optional).** Off by default. A ready-made block in `custom.css` recolors Immich's purple (and the dark-mode pale blue) from a single value, for example a pastel orange. See "accent color" in the file for how to turn it on.
 - **Photo grids.** Day groups and photos have rounded corners, and each photo zooms slightly on hover. This applies to the timeline, search results, albums and other galleries.
 - **Scrolling.** On the timeline, album, person, partner and shared pages, photos scroll up behind the top bar instead of being cut off below it.
+- **Loading placeholder.** While months of the timeline load, the pulsing blocks look like a real justified gallery (rows of the real row height, cells of mixed widths and rounded corners) instead of identical squares. The color comes from the accent scale, so it follows the theme.
 - **People.** Cards are circles that grow on hover with a ring. The name is plain text with a box only on hover or focus, the menu button is a glass pill in the corner, and the people grid uses fixed-size cards.
 - **Albums.** The menu button on each album card matches the one on people cards.
 - **Places and explore.** Tiles zoom and un-dim on hover, with the name overlaid on the cover. Explore's person avatars zoom too.

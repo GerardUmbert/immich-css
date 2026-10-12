@@ -477,6 +477,39 @@ html::-webkit-scrollbar-thumb:hover {
   scrollbar-color: color-mix(in srgb, currentColor 30%, transparent) transparent;
 }
 
+/* Timeline loading placeholder (the pulsing blocks shown while a month loads).
+ * Immich draws it as ONE element with a tiled flat-color background image, which reads as a
+ * grid of identical squares (lib/elements/Skeleton.svelte, used by Timeline.svelte). Here the
+ * image is replaced by a mask shaped like a justified gallery: rows exactly one photo row
+ * high (235px, 100px on narrow screens, like Immich's real layout) with cells of mixed
+ * widths and 8px corners, and the fill is a plain CSS color taken from the accent scale, so
+ * it follows the theme (and the accent switch) in light and dark mode.
+ * Cell widths per row (px at 235px high; every row sums to 1200, the tile repeats):
+ *   row 1: 313, 176, 418, 132, 161
+ *   row 2: 176, 352, 235, 313, 124
+ *   row 3: 548, 235, 176, 241
+ *   row 4: 235, 313, 132, 352, 168
+ * (portrait ~130-175, 3:4 ~176, 1:1 ~235, 4:3 ~313, 16:9 ~418, ultra-wide ~548)
+ * Scoped to the timeline so the settings page's usage skeleton is left alone. */
+#virtual-timeline [data-skeleton] {
+  background-image: none;
+  background-color: var(--immich-ui-primary-100);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='940' viewBox='0 0 1200 940'%3E%3Crect x='1' y='1' width='311' height='233' rx='8'/%3E%3Crect x='314' y='1' width='174' height='233' rx='8'/%3E%3Crect x='490' y='1' width='416' height='233' rx='8'/%3E%3Crect x='908' y='1' width='130' height='233' rx='8'/%3E%3Crect x='1040' y='1' width='159' height='233' rx='8'/%3E%3Crect x='1' y='236' width='174' height='233' rx='8'/%3E%3Crect x='177' y='236' width='350' height='233' rx='8'/%3E%3Crect x='529' y='236' width='233' height='233' rx='8'/%3E%3Crect x='764' y='236' width='311' height='233' rx='8'/%3E%3Crect x='1077' y='236' width='122' height='233' rx='8'/%3E%3Crect x='1' y='471' width='546' height='233' rx='8'/%3E%3Crect x='549' y='471' width='233' height='233' rx='8'/%3E%3Crect x='784' y='471' width='174' height='233' rx='8'/%3E%3Crect x='960' y='471' width='239' height='233' rx='8'/%3E%3Crect x='1' y='706' width='233' height='233' rx='8'/%3E%3Crect x='236' y='706' width='311' height='233' rx='8'/%3E%3Crect x='549' y='706' width='130' height='233' rx='8'/%3E%3Crect x='681' y='706' width='350' height='233' rx='8'/%3E%3Crect x='1033' y='706' width='166' height='233' rx='8'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='940' viewBox='0 0 1200 940'%3E%3Crect x='1' y='1' width='311' height='233' rx='8'/%3E%3Crect x='314' y='1' width='174' height='233' rx='8'/%3E%3Crect x='490' y='1' width='416' height='233' rx='8'/%3E%3Crect x='908' y='1' width='130' height='233' rx='8'/%3E%3Crect x='1040' y='1' width='159' height='233' rx='8'/%3E%3Crect x='1' y='236' width='174' height='233' rx='8'/%3E%3Crect x='177' y='236' width='350' height='233' rx='8'/%3E%3Crect x='529' y='236' width='233' height='233' rx='8'/%3E%3Crect x='764' y='236' width='311' height='233' rx='8'/%3E%3Crect x='1077' y='236' width='122' height='233' rx='8'/%3E%3Crect x='1' y='471' width='546' height='233' rx='8'/%3E%3Crect x='549' y='471' width='233' height='233' rx='8'/%3E%3Crect x='784' y='471' width='174' height='233' rx='8'/%3E%3Crect x='960' y='471' width='239' height='233' rx='8'/%3E%3Crect x='1' y='706' width='233' height='233' rx='8'/%3E%3Crect x='236' y='706' width='311' height='233' rx='8'/%3E%3Crect x='549' y='706' width='130' height='233' rx='8'/%3E%3Crect x='681' y='706' width='350' height='233' rx='8'/%3E%3Crect x='1033' y='706' width='166' height='233' rx='8'/%3E%3C/svg%3E");
+  -webkit-mask-size: 1200px 940px;
+  mask-size: 1200px 940px;
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+}
+@media (max-width: 767px) {
+  #virtual-timeline [data-skeleton] {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='940' viewBox='0 0 1200 940'%3E%3Crect x='2.35' y='2.35' width='308.3' height='230.3' rx='18.8'/%3E%3Crect x='315.35' y='2.35' width='171.3' height='230.3' rx='18.8'/%3E%3Crect x='491.35' y='2.35' width='413.3' height='230.3' rx='18.8'/%3E%3Crect x='909.35' y='2.35' width='127.3' height='230.3' rx='18.8'/%3E%3Crect x='1041.35' y='2.35' width='156.3' height='230.3' rx='18.8'/%3E%3Crect x='2.35' y='237.35' width='171.3' height='230.3' rx='18.8'/%3E%3Crect x='178.35' y='237.35' width='347.3' height='230.3' rx='18.8'/%3E%3Crect x='530.35' y='237.35' width='230.3' height='230.3' rx='18.8'/%3E%3Crect x='765.35' y='237.35' width='308.3' height='230.3' rx='18.8'/%3E%3Crect x='1078.35' y='237.35' width='119.3' height='230.3' rx='18.8'/%3E%3Crect x='2.35' y='472.35' width='543.3' height='230.3' rx='18.8'/%3E%3Crect x='550.35' y='472.35' width='230.3' height='230.3' rx='18.8'/%3E%3Crect x='785.35' y='472.35' width='171.3' height='230.3' rx='18.8'/%3E%3Crect x='961.35' y='472.35' width='236.3' height='230.3' rx='18.8'/%3E%3Crect x='2.35' y='707.35' width='230.3' height='230.3' rx='18.8'/%3E%3Crect x='237.35' y='707.35' width='308.3' height='230.3' rx='18.8'/%3E%3Crect x='550.35' y='707.35' width='127.3' height='230.3' rx='18.8'/%3E%3Crect x='682.35' y='707.35' width='347.3' height='230.3' rx='18.8'/%3E%3Crect x='1034.35' y='707.35' width='163.3' height='230.3' rx='18.8'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='940' viewBox='0 0 1200 940'%3E%3Crect x='2.35' y='2.35' width='308.3' height='230.3' rx='18.8'/%3E%3Crect x='315.35' y='2.35' width='171.3' height='230.3' rx='18.8'/%3E%3Crect x='491.35' y='2.35' width='413.3' height='230.3' rx='18.8'/%3E%3Crect x='909.35' y='2.35' width='127.3' height='230.3' rx='18.8'/%3E%3Crect x='1041.35' y='2.35' width='156.3' height='230.3' rx='18.8'/%3E%3Crect x='2.35' y='237.35' width='171.3' height='230.3' rx='18.8'/%3E%3Crect x='178.35' y='237.35' width='347.3' height='230.3' rx='18.8'/%3E%3Crect x='530.35' y='237.35' width='230.3' height='230.3' rx='18.8'/%3E%3Crect x='765.35' y='237.35' width='308.3' height='230.3' rx='18.8'/%3E%3Crect x='1078.35' y='237.35' width='119.3' height='230.3' rx='18.8'/%3E%3Crect x='2.35' y='472.35' width='543.3' height='230.3' rx='18.8'/%3E%3Crect x='550.35' y='472.35' width='230.3' height='230.3' rx='18.8'/%3E%3Crect x='785.35' y='472.35' width='171.3' height='230.3' rx='18.8'/%3E%3Crect x='961.35' y='472.35' width='236.3' height='230.3' rx='18.8'/%3E%3Crect x='2.35' y='707.35' width='230.3' height='230.3' rx='18.8'/%3E%3Crect x='237.35' y='707.35' width='308.3' height='230.3' rx='18.8'/%3E%3Crect x='550.35' y='707.35' width='127.3' height='230.3' rx='18.8'/%3E%3Crect x='682.35' y='707.35' width='347.3' height='230.3' rx='18.8'/%3E%3Crect x='1034.35' y='707.35' width='163.3' height='230.3' rx='18.8'/%3E%3C/svg%3E");
+    -webkit-mask-size: 510.6px 400px;
+    mask-size: 510.6px 400px;
+  }
+}
+
 /* ---------------------------------------------------------- FRAGILE HOOKS
  * Depend on Tailwind classes or on the shape of upstream markup rather than on an
  * id / data attribute. If something stops working after an update, look here first.

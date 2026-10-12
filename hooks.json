@@ -232,6 +232,55 @@
       ]
     },
     {
+      "id": "timeline-skeleton",
+      "what": "Loading placeholder of the timeline looks like a justified gallery (mixed widths, rounded cells)",
+      "why": "Immich tiles one flat square image over a whole unloaded month; this mimics real rows instead, colored from the accent scale.",
+      "css": "Timeline loading placeholder",
+      "hooks": [
+        "#virtual-timeline [data-skeleton]"
+      ],
+      "upstream": [
+        "lib/elements/Skeleton.svelte",
+        "lib/components/timeline/Timeline.svelte"
+      ],
+      "ui": [],
+      "external": [],
+      "verified": "rendered in headless Chrome (light, dark, mobile width); not yet seen in a running Immich",
+      "fragile": false,
+      "anchors": [
+        {
+          "file": "lib/elements/Skeleton.svelte",
+          "match": "data-skeleton=\"true\"",
+          "means": "skeleton element hook"
+        },
+        {
+          "file": "lib/elements/Skeleton.svelte",
+          "match": "background-image:\\s*url\\(",
+          "means": "skeleton draws its pattern with a background-image (replaced by the mask)"
+        },
+        {
+          "file": "lib/components/timeline/Timeline.svelte",
+          "match": "id=\"virtual-timeline\"[\\s\\S]*<Skeleton",
+          "means": "skeleton is rendered inside #virtual-timeline"
+        },
+        {
+          "file": "lib/components/timeline/Timeline.svelte",
+          "match": "rowHeight:\\s*235",
+          "means": "desktop row height is 235 (hard-coded in the mask)"
+        },
+        {
+          "file": "lib/components/timeline/Timeline.svelte",
+          "match": "rowHeight:\\s*100",
+          "means": "mobile row height is 100 (hard-coded in the mask)"
+        },
+        {
+          "file": "lib/elements/Skeleton.svelte",
+          "match": "max-width:\\s*767px",
+          "means": "skeleton switches size at 767px (the mask media query matches it)"
+        }
+      ]
+    },
+    {
       "id": "account-menu",
       "what": "Solid off-white account panel, pill-shaped Sign Out",
       "why": "Remove the gray box, white cards and hard 4px gap. Immich's focusTrap action inserts sentinel <div>s as first and last children, so child-position selectors (:first-child / :last-child) hit those instead of the real content.",

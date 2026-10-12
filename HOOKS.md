@@ -86,6 +86,22 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
   - scrubber hook (`lib/components/timeline/Scrubber.svelte`)
 - **Verified:** source + runtime (main page and album screenshots)
 
+## timeline-skeleton
+
+- **What:** Loading placeholder of the timeline looks like a justified gallery (mixed widths, rounded cells)
+- **Why:** Immich tiles one flat square image over a whole unloaded month; this mimics real rows instead, colored from the accent scale.
+- **CSS section:** Timeline loading placeholder
+- **Selectors:** `#virtual-timeline [data-skeleton]`
+- **Immich files** (under `web/src`): `lib/elements/Skeleton.svelte`, `lib/components/timeline/Timeline.svelte`
+- **Assumptions checked by `anchors`:**
+  - skeleton element hook (`lib/elements/Skeleton.svelte`)
+  - skeleton draws its pattern with a background-image (replaced by the mask) (`lib/elements/Skeleton.svelte`)
+  - skeleton is rendered inside #virtual-timeline (`lib/components/timeline/Timeline.svelte`)
+  - desktop row height is 235 (hard-coded in the mask) (`lib/components/timeline/Timeline.svelte`)
+  - mobile row height is 100 (hard-coded in the mask) (`lib/components/timeline/Timeline.svelte`)
+  - skeleton switches size at 767px (the mask media query matches it) (`lib/elements/Skeleton.svelte`)
+- **Verified:** rendered in headless Chrome (light, dark, mobile width); not yet seen in a running Immich
+
 ## account-menu
 
 - **What:** Solid off-white account panel, pill-shaped Sign Out
