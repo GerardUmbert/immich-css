@@ -51,6 +51,54 @@ body.asset-viewer-open {
   background-color: rgb(20 20 20);
 }
 
+/* ------------------------------------------------------------ accent color
+ * DISABLED by default (Immich's own purple / pale blue stays). To try another
+ * accent, delete the two marker lines (ACCENT-START / ACCENT-END) around the
+ * block below and edit --c-accent (light mode) and --c-accent-dark (dark mode),
+ * both `R G B` triplets (sample values: pastel orange).
+ *
+ * Immich has two sets of accent variables and both must be set:
+ *  - legacy:  --immich-primary / --immich-dark-primary (RGB triplets)
+ *             used by bg-immich-primary, text-immich-primary, ...
+ *  - @immich/ui: --immich-ui-primary-50..950 (a shade scale, 500 = base)
+ *             used by text-primary, bg-primary/10, border-primary, buttons, ...
+ * The shades are derived from the base color by mixing with white / black.
+ * Note: white text on filled accent buttons gets hard to read with light accents.
+ */
+/* ACCENT-START
+:root {
+  --c-accent: 244 162 97;
+  --c-accent-dark: 244 180 130;
+
+  --immich-primary: var(--c-accent);
+  --immich-ui-primary-500: rgb(var(--c-accent));
+  --immich-ui-primary-50: color-mix(in oklab, rgb(var(--c-accent)) 8%, white);
+  --immich-ui-primary-100: color-mix(in oklab, rgb(var(--c-accent)) 16%, white);
+  --immich-ui-primary-200: color-mix(in oklab, rgb(var(--c-accent)) 30%, white);
+  --immich-ui-primary-300: color-mix(in oklab, rgb(var(--c-accent)) 50%, white);
+  --immich-ui-primary-400: color-mix(in oklab, rgb(var(--c-accent)) 75%, white);
+  --immich-ui-primary-600: color-mix(in oklab, rgb(var(--c-accent)) 85%, black);
+  --immich-ui-primary-700: color-mix(in oklab, rgb(var(--c-accent)) 70%, black);
+  --immich-ui-primary-800: color-mix(in oklab, rgb(var(--c-accent)) 55%, black);
+  --immich-ui-primary-900: color-mix(in oklab, rgb(var(--c-accent)) 40%, black);
+  --immich-ui-primary-950: color-mix(in oklab, rgb(var(--c-accent)) 25%, black);
+}
+:root.dark {
+  --immich-dark-primary: var(--c-accent-dark);
+  --immich-ui-primary-500: rgb(var(--c-accent-dark));
+  --immich-ui-primary-600: color-mix(in oklab, rgb(var(--c-accent-dark)) 80%, white);
+  --immich-ui-primary-700: color-mix(in oklab, rgb(var(--c-accent-dark)) 60%, white);
+  --immich-ui-primary-800: color-mix(in oklab, rgb(var(--c-accent-dark)) 40%, white);
+  --immich-ui-primary-900: color-mix(in oklab, rgb(var(--c-accent-dark)) 20%, white);
+  --immich-ui-primary-950: color-mix(in oklab, rgb(var(--c-accent-dark)) 10%, white);
+  --immich-ui-primary-400: color-mix(in oklab, rgb(var(--c-accent-dark)) 55%, black);
+  --immich-ui-primary-300: color-mix(in oklab, rgb(var(--c-accent-dark)) 40%, black);
+  --immich-ui-primary-200: color-mix(in oklab, rgb(var(--c-accent-dark)) 30%, black);
+  --immich-ui-primary-100: color-mix(in oklab, rgb(var(--c-accent-dark)) 18%, black);
+  --immich-ui-primary-50: color-mix(in oklab, rgb(var(--c-accent-dark)) 12%, black);
+}
+ACCENT-END */
+
 /* ---------------------------------------------------------------- timeline
  * [data-image-grid] = one day group (AssetLayout.svelte), rounds its 4 corners.
  * [data-asset-id]   = one photo slot in that group (AssetLayout.svelte).
