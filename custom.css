@@ -75,6 +75,16 @@ body.asset-viewer-open {
   }
 }
 
+/* Selection / control bar (the gray pill at the top when photos are selected):
+ * #control-bar is the wrapper in lib/components/shared-components/ControlAppBar.svelte,
+ * its <nav> is @immich/ui ControlBar. Frosted glass instead of solid gray. */
+#control-bar > nav {
+  background-color: color-mix(in srgb, var(--immich-ui-light-100) 55%, transparent);
+  backdrop-filter: blur(12px) saturate(1.4);
+  border: 1px solid var(--c-glass-border);
+  box-shadow: var(--c-glass-shadow);
+}
+
 /* ------------------------------------------------------------------ people
  * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
  * Its parent wrapper and the name <input> are siblings/parents in
