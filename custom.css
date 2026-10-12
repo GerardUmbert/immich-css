@@ -110,12 +110,14 @@ main > #asset-grid {
 }
 
 /* Account menu (navbar avatar): lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte
- * One frosted-glass panel instead of a gray box holding white cards; the sign-out
- * row is separated from the profile card by a 1px line, not a 4px gap. */
+ * One solid panel in the page surface color instead of a gray box holding white
+ * cards; the sign-out row is separated from the profile card by a 1px line, not a
+ * 4px gap. For a frosted look, use the commented-out lines below. */
 #account-info-panel {
-  background-color: color-mix(in srgb, var(--immich-ui-light) 60%, transparent);
-  backdrop-filter: blur(16px) saturate(1.4);
-  border: 1px solid var(--c-glass-border);
+  background-color: var(--immich-ui-light);
+  /* background-color: color-mix(in srgb, var(--immich-ui-light) 60%, transparent); */
+  /* backdrop-filter: blur(16px) saturate(1.4); */
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
 }
 #account-info-panel > div:first-child {
   background-color: transparent;
