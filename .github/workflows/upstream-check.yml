@@ -1,0 +1,93 @@
+name: Check upstream Immich
+
+# Weekly: if Immich has published a stable release newer than the version this CSS
+# was checked against (checkedAgainst in hooks.json), diff the files the CSS
+# depends on and open an issue listing the rule groups to re-check.
+on:
+  schedule:
+    - cron: '0 7 * * 1' # Mondays 07:00 UTC
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: 'Tag to compare from (default: checkedAgainst in hooks.json)'
+        required: false
+      target:
+        description: 'Tag to compare to (default: latest stable Immich release)'
+        required: false
+      dry_run:
+        description: 'Print the report only, do not open an issue'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      INPUT_BASELINE: ${{ inputs.baseline }}
+      INPUT_TARGET: ${{ inputs.target }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Work out what to compare
+        id: versions
+        run: |
+          baseline="${INPUT_BASELINE:-$(node -p "require('./hooks.json').checkedAgainst")}"
+          target="${INPUT_TARGET:-$(gh api repos/immich-app/immich/releases/latest --jq .tag_name)}"
+          echo "baseline=$baseline" >> "$GITHUB_OUTPUT"
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+          if [ "$baseline" = "$target" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Immich $target is the version this CSS was checked against. Nothing to do." | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the report
+        if: steps.versions.outputs.changed == 'true'
+        env:
+          BASELINE: ${{ steps.versions.outputs.baseline }}
+          TARGET: ${{ steps.versions.outputs.target }}
+        run: |
+          node tools/hooks.mjs setup
+          git -C immich fetch --depth 1 origin tag "$BASELINE"
+          git -C immich fetch --depth 1 origin tag "$TARGET"
+          {
+            echo "Immich **$TARGET** is out. This CSS was last checked against **$BASELINE**."
+            echo
+            echo '```'
+            node tools/hooks.mjs check "$BASELINE" "$TARGET"
+            old_ui="$(node tools/hooks.mjs ui-version "$BASELINE")"
+            new_ui="$(node tools/hooks.mjs ui-version "$TARGET")"
+            if [ "$old_ui" != "$new_ui" ]; then
+              echo
+              echo "--- @immich/ui $old_ui -> $new_ui ---"
+              node tools/hooks.mjs check-ui "$old_ui" "$new_ui"
+            fi
+            echo '```'
+            echo
+            echo 'After reviewing the pages in the README checklist, update `checkedAgainst` and `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.'
+          } > report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open an issue
+        if: steps.versions.outputs.changed == 'true' && env.DRY_RUN != 'true'
+        env:
+          TARGET: ${{ steps.versions.outputs.target }}
+        run: |
+          title="Immich $TARGET released: review CSS hooks"
+          existing="$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing already open for $TARGET."
+          else
+            gh issue create --title "$title" --body-file report.md
+          fi
