@@ -131,6 +131,32 @@ a[href*='/people/']:not(#people-card *) > div:first-child {
   }
 }
 
+/* people page grid (routes/(user)/people/PeopleInfiniteScroll.svelte):
+ * upstream uses 2-10 columns by breakpoint, so cards stretch with the screen.
+ * Fixed-size cards instead; tweak --c-person-size to taste. */
+:root {
+  --c-person-size: 9rem;
+}
+div:has(> div > #people-card) {
+  grid-template-columns: repeat(auto-fill, var(--c-person-size));
+  justify-content: start;
+}
+
+/* ----------------------------------------------------------------- sidebar
+ * Scrollbar hidden until the menu is hovered. Only the color changes, so the
+ * scrollbar's space is always reserved and nothing shifts when it appears.
+ * User menu: nav#sidebar (lib/components/sidebar/Sidebar.svelte).
+ * Admin menu: @immich/ui AppShellSidebar, has no id, found by its first link.
+ */
+#sidebar,
+div:has(> div > div > div > a[href='/admin/users']) {
+  scrollbar-color: transparent transparent;
+}
+#sidebar:hover,
+div:has(> div > div > div > a[href='/admin/users']):hover {
+  scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
+}
+
 /* ---------------------------------------------------------- places/explore
  * Place tiles: a link whose first child is the dimmed image
  * (routes/(user)/explore/+page.svelte, routes/(user)/places/PlacesCardGroup.svelte).
