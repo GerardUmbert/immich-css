@@ -23,6 +23,7 @@ Served by GitHub Pages: the URL never changes and updates go live about a minute
 - **Places and explore.** Tiles zoom and un-dim on hover, with the name overlaid on the cover. Explore's person avatars zoom too.
 - **Glass surfaces.** The selection bar is translucent and blurred. The account menu is one solid panel with a pill-shaped sign-out button instead of a gray box with white cards.
 - **Sidebar.** The user and admin menus look the same: side padding, fully rounded items, and a scrollbar hidden until you hover the menu.
+- **Scrollbars.** The page scrollbar is a slim rounded thumb with no track, turning accent-colored on hover. Other scroll areas get a muted thumb.
 - **Search filters.** Button borders are softer instead of matching the text color.
 - **Map.** Rounded canvas, glass controls, cluster markers with a solid border, and no scale or attribution.
 
