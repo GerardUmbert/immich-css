@@ -180,6 +180,24 @@ div:has(> div > div > div > a[href='/admin/users']):hover {
   scrollbar-color: color-mix(in srgb, currentColor 35%, transparent) transparent;
 }
 
+/* Same look for user and admin menus: side gap on both sides, fully rounded items.
+ * (Upstream: items are flush to the left edge and only rounded on the right; the
+ * admin menu uses 1rem on the right, the user menu 1.5rem.)
+ * Items are the NavbarItem links; the admin menu is found by its first link. */
+:root {
+  --c-side-gap: 12px;
+}
+#sidebar > div,
+div:has(> div > div > div > a[href='/admin/users']) > div:first-child {
+  padding-inline: var(--c-side-gap);
+}
+div:has(> div > div > div > a[href='/admin/users']) > div:last-child {
+  margin-inline: var(--c-side-gap);
+}
+:is(#sidebar, div:has(> div > div > div > a[href='/admin/users'])) a {
+  border-radius: 9999px;
+}
+
 /* ---------------------------------------------------------- places/explore
  * Place tiles: a link whose first child is the dimmed image
  * (routes/(user)/explore/+page.svelte, routes/(user)/places/PlacesCardGroup.svelte).
