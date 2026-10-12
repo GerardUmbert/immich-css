@@ -130,6 +130,13 @@ ACCENT-END */
   }
 }
 
+/* Top navbar: center the search box (the wrapper has max-w-5xl and flex-1, so it
+ * was pushed against the logo side). Found via the form inside it
+ * (lib/components/shared-components/navigation-bar/NavigationBar.svelte). */
+#dashboard-navbar div:has(> div > form[role='search']) {
+  margin-inline: auto;
+}
+
 /* Selection / control bar (the gray pill at the top when photos are selected):
  * #control-bar is the wrapper in lib/components/shared-components/ControlAppBar.svelte,
  * its <nav> is @immich/ui ControlBar. Frosted glass instead of solid gray. */

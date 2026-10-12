@@ -65,6 +65,23 @@
       "ui": []
     },
     {
+      "id": "navbar-search",
+      "what": "Search box centered in the top navbar",
+      "why": "The search wrapper (max-w-5xl, flex-1) was pushed against the logo side.",
+      "css": "timeline (Top navbar)",
+      "hooks": [
+        "#dashboard-navbar div:has(> div > form[role='search'])"
+      ],
+      "upstream": [
+        "lib/components/shared-components/navigation-bar/NavigationBar.svelte",
+        "lib/components/shared-components/search-bar/SearchBar.svelte"
+      ],
+      "ui": [],
+      "external": [],
+      "verified": "source only",
+      "fragile": false
+    },
+    {
       "id": "selection-bar",
       "what": "Frosted-glass selection / control bar",
       "why": "Replace the solid gray pill.",

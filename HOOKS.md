@@ -34,6 +34,15 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Immich files** (under `web/src`): `lib/components/timeline/AssetLayout.svelte`, `lib/components/assets/thumbnail/Thumbnail.svelte`, `lib/components/shared-components/gallery-viewer/GalleryViewer.svelte`
 - **Verified:** source + runtime (pasted timeline markup)
 
+## navbar-search
+
+- **What:** Search box centered in the top navbar
+- **Why:** The search wrapper (max-w-5xl, flex-1) was pushed against the logo side.
+- **CSS section:** timeline (Top navbar)
+- **Selectors:** `#dashboard-navbar div:has(> div > form[role='search'])`
+- **Immich files** (under `web/src`): `lib/components/shared-components/navigation-bar/NavigationBar.svelte`, `lib/components/shared-components/search-bar/SearchBar.svelte`
+- **Verified:** source only
+
 ## selection-bar
 
 - **What:** Frosted-glass selection / control bar
