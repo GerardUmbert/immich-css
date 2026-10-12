@@ -213,16 +213,19 @@
     },
     {
       "id": "places-explore-tiles",
-      "what": "Places / explore tiles zoom and un-dim; explore person avatars zoom",
+      "what": "Places / explore tiles zoom and un-dim; explore person avatars zoom; memory cards and recently-added images zoom inside their frame",
       "why": "Hover feedback; name overlaid on the cover.",
       "css": "places/explore, people (explore page avatars)",
       "hooks": [
         "a:has(> div.brightness-75)",
-        "a[href*='/people/']:not(#people-card *)"
+        "a[href*='/people/']:not(#people-card *)",
+        "a[href*='/memories']:has(> img)",
+        "button[draggable='false']:has(> img:only-child) (recently added)"
       ],
       "upstream": [
         "routes/(user)/explore/+page.svelte",
-        "routes/(user)/places/PlacesCardGroup.svelte"
+        "routes/(user)/places/PlacesCardGroup.svelte",
+        "lib/components/memories/MemoryCard.svelte"
       ],
       "external": [],
       "verified": "source only",

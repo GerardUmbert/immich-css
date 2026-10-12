@@ -344,6 +344,28 @@ div:has(> div > div > div > a[href='/admin/users']) > div:last-child {
   direction: ltr;
 }
 
+/* Explore page, memories and recently added: the image zooms inside its own
+ * rounded frame on hover, the frame itself does not grow (same as the photo grid).
+ *  - memory cards: links to /memories with the image as a direct child
+ *    (lib/components/memories/MemoryCard.svelte)
+ *  - recently added: buttons (draggable="false") holding only an image
+ *    (routes/(user)/explore/+page.svelte)  -> see FRAGILE HOOKS */
+a[href*='/memories']:has(> img),
+button[draggable='false']:has(> img:only-child) {
+  border-radius: var(--c-radius-tile);
+  overflow: hidden;
+}
+a[href*='/memories'] > img,
+button[draggable='false'] > img:only-child {
+  transition: transform var(--c-ease);
+}
+@media (hover: hover) {
+  a[href*='/memories']:hover > img,
+  button[draggable='false']:hover > img:only-child {
+    transform: scale(var(--c-zoom));
+  }
+}
+
 /* ---------------------------------------------------------- places/explore
  * Place tiles: a link whose first child is the dimmed image
  * (routes/(user)/explore/+page.svelte, routes/(user)/places/PlacesCardGroup.svelte).
@@ -436,6 +458,7 @@ html::-webkit-scrollbar-thumb:hover {
  * Depend on Tailwind classes in upstream templates. If something stops
  * working after an update, look here first.
  *   - a:has(> div.brightness-75)   places/explore tiles (see section above)
+ *   - button[draggable='false']:has(> img:only-child)  explore "recently added" (no id or data hook upstream)
  *   - button[class*='border-dark'] search panel buttons (@immich/ui secondary outline)
  *   - .immich-scrollbar            Immich's own scrollbar utility (see scrollbars section)
  */
@@ -445,6 +468,8 @@ html::-webkit-scrollbar-thumb:hover {
   #people-card,
   #people-card + input[type='text'],
   a[href*='/people/'] > div:first-child,
+  a[href*='/memories'] > img,
+  button[draggable='false'] > img:only-child,
   a:has(> div.brightness-75) > div,
   a:has(> div.brightness-75) > span {
     transition: none;
