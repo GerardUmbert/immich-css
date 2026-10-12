@@ -85,6 +85,16 @@ body.asset-viewer-open {
   box-shadow: var(--c-glass-shadow);
 }
 
+/* Timeline scrubber date labels (lib/components/timeline/Scrubber.svelte), desktop only:
+ * the label that follows the cursor and the one shown next to the position
+ * indicator while scrolling. [data-id='scrubber'] is a stable hook. */
+[data-id='scrubber'] > #time-label:not([style*='height']),
+[data-id='scrubber'] > div:not(#time-label) > p {
+  background-color: color-mix(in srgb, var(--immich-ui-light) 45%, transparent);
+  backdrop-filter: blur(10px) saturate(1.4);
+  opacity: 1;
+}
+
 /* ------------------------------------------------------------------ people
  * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
  * Its parent wrapper and the name <input> are siblings/parents in
