@@ -359,6 +359,17 @@ a[href*='/memories'] > img,
 button[draggable='false'] > img:only-child {
   transition: transform var(--c-ease);
 }
+/* Extra space under the "Memories" heading on explore: the @immich/ui ImageCarousel
+ * adds its own mt-3 on top of the heading's mb-4 (the Places / Recently added rows
+ * only have the mb-4). Drop it when a heading row precedes the carousel (on the main
+ * photos page there is no heading and the margin stays). The cards are inline-blocks,
+ * which also leave a few px of baseline gap below them; top-aligning removes it. */
+div:has(> p) + section[style*='scrollbar-width:none'] {
+  margin-top: 0;
+}
+a[href*='/memories']:has(> img) {
+  vertical-align: top;
+}
 @media (hover: hover) {
   a[href*='/memories']:hover > img,
   button[draggable='false']:hover > img:only-child {
