@@ -167,17 +167,18 @@ main > #asset-grid {
   /* backdrop-filter: blur(16px) saturate(1.4); */
   border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
 }
-#account-info-panel > div:first-child {
+/* (the panel's first/last children are focus-trap sentinels, so target by content) */
+#account-info-panel > div:has(figure) {
   background-color: transparent;
 }
 /* the divider lives on the wrapper of "Sign Out" + support link, so the button
  * itself is a plain pill (same radius on every corner) */
-#account-info-panel > div:last-child {
+#account-info-panel > div:has(> a[href$='/auth/logout']) {
   margin-inline: 1rem;
   padding-top: 0.5rem;
   border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
 }
-#account-info-panel > div:last-child > a {
+#account-info-panel > div > a[href$='/auth/logout'] {
   background-color: transparent;
   margin: 0;
   border-radius: 9999px;
