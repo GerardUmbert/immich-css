@@ -94,6 +94,20 @@ div:has(> #asset-grid) {
 #asset-grid {
   padding-top: 0.5rem;
 }
+/* Album / person / partner / shared pages: here <main> itself reserves the
+ * navbar height as top padding (pt-(--navbar-height)), which clips photos below
+ * the control bar. Move that space inside the scroller instead. */
+main:has(> #asset-grid) {
+  padding-top: 0;
+}
+main > #asset-grid {
+  padding-top: var(--navbar-height);
+}
+@media (width < 767px) {
+  main > #asset-grid {
+    padding-top: var(--navbar-height-md);
+  }
+}
 
 /* ------------------------------------------------------------------ people
  * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
