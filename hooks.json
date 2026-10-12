@@ -213,7 +213,7 @@
     },
     {
       "id": "places-explore-tiles",
-      "what": "Places / explore tiles zoom and un-dim; explore person avatars zoom; memory cards and recently-added images zoom inside their frame; memories carousel spacing matches the other explore rows",
+      "what": "Places / explore tiles zoom and un-dim; explore person avatars zoom; memory cards and recently-added images zoom inside their frame; memories carousel spacing matches the other explore rows; more space between explore sections (not above the first)",
       "why": "Hover feedback; name overlaid on the cover.",
       "css": "places/explore, people (explore page avatars)",
       "hooks": [
@@ -221,7 +221,8 @@
         "a[href*='/people/']:not(#people-card *)",
         "a[href*='/memories']:has(> img)",
         "button[draggable='false']:has(> img:only-child) (recently added)",
-        "div:has(> p) + section[style*='scrollbar-width:none'] (carousel mt-3)"
+        "div:has(> p) + section[style*='scrollbar-width:none'] (carousel mt-3)",
+        "div:has(> div > p + a[draggable='false']) ~ div:has(...) (section spacing)"
       ],
       "upstream": [
         "routes/(user)/explore/+page.svelte",

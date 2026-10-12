@@ -359,6 +359,18 @@ a[href*='/memories'] > img,
 button[draggable='false'] > img:only-child {
   transition: transform var(--c-ease);
 }
+/* Explore page: more space between the sections (People, Places, Memories, Recently
+ * added), but not above the first one. A section is a block whose first child is a
+ * heading row: a <p> title followed by the "view all" link
+ * (routes/(user)/explore/+page.svelte). Every section after the first gets a top margin;
+ * it collapses with the sections' own mb-6, so the gap becomes --c-section-gap. */
+:root {
+  --c-section-gap: 3rem;
+}
+div:has(> div > p + a[draggable='false']) ~ div:has(> div > p + a[draggable='false']) {
+  margin-top: var(--c-section-gap);
+}
+
 /* Extra space under the "Memories" heading on explore: the @immich/ui ImageCarousel
  * adds its own mt-3 on top of the heading's mb-4 (the Places / Recently added rows
  * only have the mb-4). Drop it when a heading row precedes the carousel (on the main

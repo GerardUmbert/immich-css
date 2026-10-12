@@ -104,10 +104,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 
 ## places-explore-tiles (fragile)
 
-- **What:** Places / explore tiles zoom and un-dim; explore person avatars zoom; memory cards and recently-added images zoom inside their frame; memories carousel spacing matches the other explore rows
+- **What:** Places / explore tiles zoom and un-dim; explore person avatars zoom; memory cards and recently-added images zoom inside their frame; memories carousel spacing matches the other explore rows; more space between explore sections (not above the first)
 - **Why:** Hover feedback; name overlaid on the cover.
 - **CSS section:** places/explore, people (explore page avatars)
-- **Selectors:** `a:has(> div.brightness-75)`, `a[href*='/people/']:not(#people-card *)`, `a[href*='/memories']:has(> img)`, `button[draggable='false']:has(> img:only-child) (recently added)`, `div:has(> p) + section[style*='scrollbar-width:none'] (carousel mt-3)`
+- **Selectors:** `a:has(> div.brightness-75)`, `a[href*='/people/']:not(#people-card *)`, `a[href*='/memories']:has(> img)`, `button[draggable='false']:has(> img:only-child) (recently added)`, `div:has(> p) + section[style*='scrollbar-width:none'] (carousel mt-3)`, `div:has(> div > p + a[draggable='false']) ~ div:has(...) (section spacing)`
 - **Immich files** (under `web/src`): `routes/(user)/explore/+page.svelte`, `routes/(user)/places/PlacesCardGroup.svelte`, `lib/components/memories/MemoryCard.svelte`
 - **@immich/ui files** (under `dist`): `components/ImageCarousel/ImageCarousel.svelte`
 - **Verified:** source only
