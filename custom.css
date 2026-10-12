@@ -126,6 +126,14 @@ main > #asset-grid {
   border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
 }
 
+/* Search filter panel (lib/components/shared-components/search-bar/SearchFilters.svelte):
+ * @immich/ui outline buttons draw their border in the exact text color
+ * (border-dark). Soften the neutral ones; the active primary-colored chip keeps
+ * its border. Depends on the ui library's `border-dark` class (see FRAGILE HOOKS). */
+[role='listbox'] button[class*='border-dark'] {
+  border-color: color-mix(in srgb, currentColor 25%, transparent);
+}
+
 /* ------------------------------------------------------------------ people
  * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
  * Its parent wrapper and the name <input> are siblings/parents in
