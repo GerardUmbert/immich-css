@@ -102,11 +102,19 @@ div:has(> #asset-grid) {
  */
 #people-card {
   border-radius: 50%;
-  transition: box-shadow 0.1s ease-out;
+  transition:
+    box-shadow 0.1s ease-out,
+    transform var(--c-ease);
 }
 /* ring is a box-shadow, so the card never changes size on hover */
 #people-card:hover {
   box-shadow: 0 0 0 3px var(--c-ring);
+}
+/* same grow effect as the avatars on the explore page */
+@media (hover: hover) {
+  #people-card:hover {
+    transform: scale(var(--c-zoom));
+  }
 }
 
 /* the wrapper around card + name: no hover border / background / shadow */
