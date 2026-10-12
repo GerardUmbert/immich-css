@@ -56,7 +56,15 @@ node tools/hooks.mjs ui-version <newTag>            # which @immich/ui version i
 node tools/hooks.mjs check-ui <oldVer> <newVer>     # @immich/ui files the rules depend on
 ```
 
-Each command lists only the rule groups whose files changed, with their selectors, so you know what to re-inspect. Maplibre (map marker markup) isn't covered; compare its version by hand. When everything is checked, update `checkedAgainst` / `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.
+Changed files don't always mean a broken rule, so there is also a sharper check. Each rule group in `hooks.json` lists **anchors**: assumptions about the upstream source it relies on (for example, "the recently-added item is a button whose only child is an image"). This reports only the ones that stopped being true:
+
+```
+node tools/hooks.mjs anchors <ref>      # exit code 2 if any assumption is broken
+```
+
+It runs automatically on every push that touches the rules, and the weekly check includes it for the new release. When you add or change a rule, add its anchors to `hooks.json`.
+
+Each of the other commands lists only the rule groups whose files changed, with their selectors, so you know what to re-inspect. Maplibre (map marker markup) isn't covered; compare its version by hand. When everything is checked, update `checkedAgainst` / `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.
 
 ### Automatic weekly check
 

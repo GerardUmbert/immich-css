@@ -7,6 +7,7 @@
 //   node tools/hooks.mjs setup                      create / refresh both references for the version in hooks.json
 //   node tools/hooks.mjs check <oldRef> <newRef>    hooks whose Immich source files changed between two git refs
 //   node tools/hooks.mjs check-ui <oldVer> <newVer> hooks whose @immich/ui files changed between two versions
+//   node tools/hooks.mjs anchors [ref]             verify the assumptions each rule makes about the source (exit 2 if any is broken)
 //   node tools/hooks.mjs ui-version <ref>           the exact @immich/ui version a given Immich ref pins
 //   node tools/hooks.mjs docs                       regenerate HOOKS.md from hooks.json
 //
@@ -170,6 +171,41 @@ function checkUi(oldVer, newVer) {
   console.log('\nMaplibre / svelte-maplibre-gl (map marker markup) are not covered: compare their versions by hand.');
 }
 
+// "Anchors" are assertions about the upstream source that each rule relies on, for
+// example "the explore recently-added item is a button whose only child is an img".
+// A changed file isn't necessarily a broken rule, and an unchanged file can't break one,
+// so this is the sharper check: it fails only when an assumption stops being true.
+function anchors(ref = map.checkedAgainst) {
+  const ui = uiVersionAt(ref);
+  fetchUi(ui);
+  let failures = 0;
+  let total = 0;
+  for (const hook of map.hooks) {
+    for (const anchor of hook.anchors ?? []) {
+      total++;
+      let text;
+      try {
+        text =
+          anchor.scope === 'ui'
+            ? readFileSync(uiFile(ui, anchor.file), 'utf8')
+            : git('show', `${ref}:${upstreamPath(anchor.file)}`);
+      } catch {
+        text = undefined;
+      }
+      const ok = text !== undefined && new RegExp(anchor.match).test(text);
+      if (!ok) {
+        failures++;
+        console.log(`\n[${hook.id}]${hook.fragile ? ' (fragile)' : ''} BROKEN ASSUMPTION`);
+        console.log(`  ${text === undefined ? 'file missing' : 'pattern not found'}: ${anchor.file}${anchor.scope === 'ui' ? ' (@immich/ui ' + ui + ')' : ''}`);
+        console.log(`  expected: ${anchor.means}`);
+        console.log(`  affected selectors: ${hook.hooks.join(' | ')}`);
+      }
+    }
+  }
+  console.log(`\n${total - failures}/${total} assumptions hold at ${ref} (@immich/ui ${ui}).`);
+  if (failures > 0) process.exitCode = 2;
+}
+
 function docs() {
   const lines = [
     '# Hook map',
@@ -192,6 +228,10 @@ function docs() {
     );
     if ((hook.ui ?? []).length > 0) lines.push(`- **@immich/ui files** (under \`dist\`): ${hook.ui.map((f) => `\`${f}\``).join(', ')}`);
     if (hook.external.length > 0) lines.push(`- **Also depends on:** ${hook.external.join('; ')}`);
+    if ((hook.anchors ?? []).length > 0) {
+      lines.push('- **Assumptions checked by `anchors`:**');
+      for (const anchor of hook.anchors) lines.push(`  - ${anchor.means} (\`${anchor.file}\`${anchor.scope === 'ui' ? ', @immich/ui' : ''})`);
+    }
     lines.push(`- **Verified:** ${hook.verified}`, '');
   }
   writeFileSync(join(root, 'HOOKS.md'), lines.join('\n'));
@@ -199,7 +239,7 @@ function docs() {
 }
 
 function usage() {
-  console.error('usage: node tools/hooks.mjs <setup | check <oldRef> <newRef> | check-ui <oldVer> <newVer> | ui-version <ref> | docs>');
+  console.error('usage: node tools/hooks.mjs <setup | check <oldRef> <newRef> | check-ui <oldVer> <newVer> | anchors [ref] | ui-version <ref> | docs>');
   process.exit(1);
 }
 
@@ -208,5 +248,6 @@ if (command === 'setup') setup();
 else if (command === 'check') check(...args);
 else if (command === 'check-ui') checkUi(...args);
 else if (command === 'ui-version') console.log(uiVersionAt(args[0] ?? map.checkedAgainst));
+else if (command === 'anchors') anchors(args[0]);
 else if (command === 'docs') docs();
 else usage();

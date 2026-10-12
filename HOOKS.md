@@ -13,6 +13,11 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `--immich-ui-light (full color, not a triplet)`, `--immich-bg / --immich-dark-bg (RGB triplets)`, `--color-white / --color-black (Tailwind theme vars)`, `html.dark:root / html.light:root`
 - **Immich files** (under `web/src`): `app.css`, `app.html`
 - **@immich/ui files** (under `dist`): `theme/default.css`
+- **Assumptions checked by `anchors`:**
+  - html.dark hard-codes a black background (`app.html`)
+  - html.light hard-codes a white background (`app.html`)
+  - legacy dark background variable (`app.css`)
+  - ui theme still defines --immich-ui-light (`theme/default.css`, @immich/ui)
 - **Verified:** source + runtime (pure-black strip on search page traced to app.html)
 
 ## accent
@@ -23,6 +28,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `--immich-primary`, `--immich-dark-primary`, `--immich-ui-primary-50..950`
 - **Immich files** (under `web/src`): `app.css`
 - **@immich/ui files** (under `dist`): `theme/default.css`
+- **Assumptions checked by `anchors`:**
+  - legacy light accent variable (`app.css`)
+  - legacy dark accent variable (`app.css`)
+  - ui accent scale base (`theme/default.css`, @immich/ui)
 - **Verified:** source only (shown once in a running instance, then reverted)
 
 ## photo-grid
@@ -32,6 +41,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **CSS section:** timeline
 - **Selectors:** `[data-image-grid]`, `[data-asset-id]`, `:has(> [data-thumbnail-focus-container])`
 - **Immich files** (under `web/src`): `lib/components/timeline/AssetLayout.svelte`, `lib/components/assets/thumbnail/Thumbnail.svelte`, `lib/components/shared-components/gallery-viewer/GalleryViewer.svelte`
+- **Assumptions checked by `anchors`:**
+  - day group container hook (`lib/components/timeline/AssetLayout.svelte`)
+  - photo slot hook (`lib/components/timeline/AssetLayout.svelte`)
+  - thumbnail root hook (search and album grids) (`lib/components/assets/thumbnail/Thumbnail.svelte`)
 - **Verified:** source + runtime (pasted timeline markup)
 
 ## navbar-search
@@ -41,6 +54,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **CSS section:** timeline (Top navbar)
 - **Selectors:** `#dashboard-navbar div:has(> div > form[role='search'])`
 - **Immich files** (under `web/src`): `lib/components/shared-components/navigation-bar/NavigationBar.svelte`, `lib/components/shared-components/search-bar/SearchBar.svelte`
+- **Assumptions checked by `anchors`:**
+  - navbar id (`lib/components/shared-components/navigation-bar/NavigationBar.svelte`)
+  - search wrapper div directly contains SearchBar (`lib/components/shared-components/navigation-bar/NavigationBar.svelte`)
+  - SearchBar renders div > form[role=search] (`lib/components/shared-components/search-bar/SearchBar.svelte`)
 - **Verified:** source only
 
 ## selection-bar
@@ -51,6 +68,9 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `#control-bar > nav`
 - **Immich files** (under `web/src`): `lib/components/shared-components/ControlAppBar.svelte`
 - **@immich/ui files** (under `dist`): `components/ControlBar/ControlBar.svelte`
+- **Assumptions checked by `anchors`:**
+  - control bar wrapper id (`lib/components/shared-components/ControlAppBar.svelte`)
+  - ControlBar renders a <nav> (`components/ControlBar/ControlBar.svelte`, @immich/ui)
 - **Verified:** source only
 
 ## scroll-behind-bar
@@ -60,6 +80,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **CSS section:** timeline (Timeline scroll area, Album / person / partner / shared pages)
 - **Selectors:** `div:has(> #asset-grid)`, `#asset-grid`, `main:has(> #asset-grid)`, `main > #asset-grid`, `body:has(#asset-grid) #control-bar (keeps the bar clear of the scrubber strip)`
 - **Immich files** (under `web/src`): `lib/components/timeline/Timeline.svelte`, `lib/components/layouts/UserPageLayout.svelte`, `lib/components/album-page/AlbumViewer.svelte`, `routes/(user)/albums/[albumId=id]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/partners/[userId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `routes/(user)/people/[personId]/[[photos=photos]]/[[assetId=id]]/+page.svelte`, `lib/components/timeline/Scrubber.svelte`, `lib/components/shared-components/ControlAppBar.svelte`
+- **Assumptions checked by `anchors`:**
+  - timeline scroller id (`lib/components/timeline/Timeline.svelte`)
+  - scrubber width is 60px (hard-coded as --c-scrubber-w in the CSS) (`lib/components/timeline/Scrubber.svelte`)
+  - scrubber hook (`lib/components/timeline/Scrubber.svelte`)
 - **Verified:** source + runtime (main page and album screenshots)
 
 ## account-menu
@@ -70,6 +94,12 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `#account-info-panel`, `#account-info-panel > div:has(figure)`, `#account-info-panel > div > a[href$='/auth/logout']`
 - **Immich files** (under `web/src`): `lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte`, `lib/actions/focus-trap.ts`
 - **@immich/ui files** (under `dist`): `internal/Button.svelte`, `components/IconButton/IconButton.svelte`
+- **Assumptions checked by `anchors`:**
+  - panel id (`lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte`)
+  - sign-out link comes from Route.logout() (`lib/components/shared-components/navigation-bar/AccountInfoPanel.svelte`)
+  - logout path (selector matches an href ending in /auth/logout) (`lib/route.ts`)
+  - focus trap still inserts sentinel divs (why child-position selectors are avoided) (`lib/actions/focus-trap.ts`)
+  - avatar renders a <figure> (the profile card is found by it) (`lib/components/shared-components/UserAvatar.svelte`)
 - **Verified:** source + runtime (outerHTML pasted from a v3.3.1 server)
 
 ## search-buttons (fragile)
@@ -80,6 +110,9 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `[role='listbox'] button[class*='border-dark']`
 - **Immich files** (under `web/src`): `lib/components/shared-components/search-bar/SearchFilters.svelte`, `lib/components/shared-components/search-bar/SearchButton.svelte`
 - **@immich/ui files** (under `dist`): `internal/Button.svelte`
+- **Assumptions checked by `anchors`:**
+  - search dropdown keeps role=listbox (`lib/components/shared-components/search-bar/SearchFilters.svelte`)
+  - ui secondary outline button still uses the border-dark class (`internal/Button.svelte`, @immich/ui)
 - **Verified:** source only
 
 ## people
@@ -90,6 +123,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `#people-card`, `div:has(> #people-card)`, `#people-card + input[type='text']`, `#people-card a > div:has(> button)`, `div:has(> div > #people-card) (grid)`
 - **Immich files** (under `web/src`): `routes/(user)/people/PeopleCard.svelte`, `routes/(user)/people/+page.svelte`, `routes/(user)/people/PeopleInfiniteScroll.svelte`
 - **@immich/ui files** (under `dist`): `components/ContextMenu/ContextMenuButton.svelte`, `internal/Button.svelte`
+- **Assumptions checked by `anchors`:**
+  - card id (`routes/(user)/people/PeopleCard.svelte`)
+  - name input is the next sibling of the card (`routes/(user)/people/+page.svelte`)
+  - people grid container (`routes/(user)/people/PeopleInfiniteScroll.svelte`)
 - **Verified:** source only
 
 ## album-card-button
@@ -100,16 +137,51 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `[data-testid='context-button-parent'] button`
 - **Immich files** (under `web/src`): `lib/components/album-page/AlbumCard.svelte`
 - **@immich/ui files** (under `dist`): `components/ContextMenu/ContextMenuButton.svelte`, `internal/Button.svelte`
+- **Assumptions checked by `anchors`:**
+  - menu button wrapper test id (`lib/components/album-page/AlbumCard.svelte`)
 - **Verified:** source only
 
-## places-explore-tiles (fragile)
+## places-tiles (fragile)
 
-- **What:** Places / explore tiles zoom and un-dim; explore person avatars zoom; memory cards and recently-added images zoom inside their frame; memories carousel spacing matches the other explore rows; more space between explore sections (not above the first)
+- **What:** Places tiles (explore and /places) zoom and un-dim, name overlaid on the cover
 - **Why:** Hover feedback; name overlaid on the cover.
-- **CSS section:** places/explore, people (explore page avatars)
-- **Selectors:** `a:has(> div.brightness-75)`, `a[href*='/people/']:not(#people-card *)`, `a[href*='/memories']:has(> img)`, `button[draggable='false']:has(> img:only-child) (recently added)`, `div:has(> p) + section[style*='scrollbar-width:none'] (carousel mt-3)`, `div:has(> div > p + a[draggable='false']) ~ div:has(...) (section spacing)`
-- **Immich files** (under `web/src`): `routes/(user)/explore/+page.svelte`, `routes/(user)/places/PlacesCardGroup.svelte`, `lib/components/memories/MemoryCard.svelte`
+- **CSS section:** places/explore
+- **Selectors:** `a:has(> div.brightness-75)`
+- **Immich files** (under `web/src`): `routes/(user)/explore/+page.svelte`, `routes/(user)/places/PlacesCardGroup.svelte`
+- **Assumptions checked by `anchors`:**
+  - places tile image keeps its Tailwind brightness-75 class (the only hook) (`routes/(user)/explore/+page.svelte`)
+  - places page tile keeps brightness-75 (`routes/(user)/places/PlacesCardGroup.svelte`)
+- **Verified:** source only
+
+## explore-zoom (fragile)
+
+- **What:** Explore page: person avatars, memory cards and recently-added images zoom on hover
+- **Why:** Same hover zoom as the photo grid, inside the frame (the frame does not grow).
+- **CSS section:** people (explore avatars), places/explore (memories and recently added)
+- **Selectors:** `a[href*='/people/']:not(#people-card *) > div:first-child`, `a[href*='/memories']:has(> img)`, `button[draggable='false']:has(> img:only-child) (recently added)`
+- **Immich files** (under `web/src`): `routes/(user)/explore/+page.svelte`, `lib/components/memories/MemoryCard.svelte`, `lib/route.ts`
+- **Assumptions checked by `anchors`:**
+  - explore person link has a div (avatar frame) as first child (`routes/(user)/explore/+page.svelte`)
+  - recently-added item is a draggable="false" button whose only child is an img (`routes/(user)/explore/+page.svelte`)
+  - memory card is a link with the img as direct first child (`lib/components/memories/MemoryCard.svelte`)
+  - memory links still come from Route.memories (selector looks for /memories in the href) (`lib/route.ts`)
+- **Verified:** source only
+
+## explore-spacing (fragile)
+
+- **What:** Explore page: more space between sections (not above the first); carousel top margin removed under a heading
+- **Why:** Sections felt cramped; the memories carousel adds its own mt-3 on top of the heading margin.
+- **CSS section:** places/explore (section spacing, carousel spacing)
+- **Selectors:** `div:has(> div > p + a[draggable='false']) ~ div:has(...) (section spacing)`, `div:has(> p) + section[style*='scrollbar-width:none'] (carousel mt-3)`
+- **Immich files** (under `web/src`): `routes/(user)/explore/+page.svelte`
 - **@immich/ui files** (under `dist`): `components/ImageCarousel/ImageCarousel.svelte`
+- **Assumptions checked by `anchors`:**
+  - heading row: <p> title directly followed by a "view all" link with draggable="false" (people) (`routes/(user)/explore/+page.svelte`)
+  - heading row shape (places) (`routes/(user)/explore/+page.svelte`)
+  - heading row shape (memories) (`routes/(user)/explore/+page.svelte`)
+  - heading row shape (recently added) (`routes/(user)/explore/+page.svelte`)
+  - carousel section keeps its inline scrollbar-width:none style (the hook) (`components/ImageCarousel/ImageCarousel.svelte`, @immich/ui)
+  - carousel still adds its own mt-3 (the margin being removed) (`components/ImageCarousel/ImageCarousel.svelte`, @immich/ui)
 - **Verified:** source only
 
 ## sidebar
@@ -120,6 +192,10 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `#sidebar`, `div:has(> div > div > div > a[href='/admin/users']) (admin menu has no id)`
 - **Immich files** (under `web/src`): `lib/components/sidebar/Sidebar.svelte`, `lib/components/layouts/AdminPageLayout.svelte`, `lib/components/shared-components/side-bar/UserSidebar.svelte`, `lib/components/shared-components/side-bar/RecentAlbums.svelte`
 - **@immich/ui files** (under `dist`): `components/Navbar/NavbarItem.svelte`, `components/AppShell/AppShellSidebar.svelte`, `components/Scrollable/Scrollable.svelte`
+- **Assumptions checked by `anchors`:**
+  - sidebar id (`lib/components/sidebar/Sidebar.svelte`)
+  - admin sidebar first link is Route.users() (how the admin menu is found) (`lib/components/layouts/AdminPageLayout.svelte`)
+  - users path (selector uses a[href="/admin/users"]) (`lib/route.ts`)
 - **Verified:** source only (left scrollbar and unified spacing not yet confirmed in a running instance)
 
 ## map
@@ -130,6 +206,8 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **Selectors:** `.maplibregl-canvas`, `.maplibregl-ctrl-bottom-left / -right`, `.maplibregl-map .maplibregl-ctrl-group`, `.maplibregl-marker div / img`
 - **Immich files** (under `web/src`): `lib/components/shared-components/map/Map.svelte`
 - **Also depends on:** maplibre-gl and svelte-maplibre-gl (marker DOM is generated there)
+- **Assumptions checked by `anchors`:**
+  - markers still come from MarkerLayer (`lib/components/shared-components/map/Map.svelte`)
 - **Verified:** unverified (marker DOM not inspected; reported as different from the source)
 
 ## scrollbars (fragile)
@@ -139,4 +217,7 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
 - **CSS section:** scrollbars
 - **Selectors:** `html::-webkit-scrollbar*`, `.immich-scrollbar`
 - **Immich files** (under `web/src`): `app.css`
+- **Assumptions checked by `anchors`:**
+  - immich-scrollbar utility still exists (`app.css`)
+  - page scrollbar still styled via html::-webkit-scrollbar (`app.css`)
 - **Verified:** source only

@@ -1,0 +1,41 @@
+name: Check rule assumptions
+
+# Whenever the rules or the hook map change, verify that every assumption listed in
+# hooks.json still holds in the Immich / @immich/ui version it was written against.
+# Catches a new or edited rule whose anchor was never added or is wrong.
+on:
+  push:
+    paths:
+      - 'custom.css'
+      - 'hooks.json'
+      - 'tools/**'
+  pull_request:
+    paths:
+      - 'custom.css'
+      - 'hooks.json'
+      - 'tools/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  anchors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch the reference sources
+        run: node tools/hooks.mjs setup
+
+      - name: Check assumptions
+        run: node tools/hooks.mjs anchors
+
+      - name: HOOKS.md is up to date
+        run: |
+          node tools/hooks.mjs docs
+          git diff --exit-code HOOKS.md

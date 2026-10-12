@@ -478,11 +478,16 @@ html::-webkit-scrollbar-thumb:hover {
 }
 
 /* ---------------------------------------------------------- FRAGILE HOOKS
- * Depend on Tailwind classes in upstream templates. If something stops
- * working after an update, look here first.
- *   - a:has(> div.brightness-75)   places/explore tiles (see section above)
- *   - button[draggable='false']:has(> img:only-child)  explore "recently added" (no id or data hook upstream)
- *   - button[class*='border-dark'] search panel buttons (@immich/ui secondary outline)
+ * Depend on Tailwind classes or on the shape of upstream markup rather than on an
+ * id / data attribute. If something stops working after an update, look here first.
+ * Every group is also listed in hooks.json (marked "fragile") with machine-checked
+ * assumptions: run `node tools/hooks.mjs anchors <ref>` to see which one broke.
+ *   - a:has(> div.brightness-75)   places tiles (Tailwind class)
+ *   - button[draggable='false']:has(> img:only-child)  explore "recently added" (markup shape)
+ *   - a[href*='/people/'] > div:first-child, a[href*='/memories']:has(> img)  explore zoom (markup shape)
+ *   - div:has(> div > p + a[draggable='false']) ~ ...  explore section spacing (heading row shape)
+ *   - div:has(> p) + section[style*='scrollbar-width:none']  carousel margin (@immich/ui internals)
+ *   - button[class*='border-dark'] search panel buttons (@immich/ui class)
  *   - .immich-scrollbar            Immich's own scrollbar utility (see scrollbars section)
  */
 

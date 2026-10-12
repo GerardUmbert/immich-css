@@ -66,6 +66,9 @@ jobs:
             echo
             echo '```'
             node tools/hooks.mjs check "$BASELINE" "$TARGET"
+            echo
+            echo "--- assumptions the rules make, checked against $TARGET ---"
+            node tools/hooks.mjs anchors "$TARGET" || true
             old_ui="$(node tools/hooks.mjs ui-version "$BASELINE")"
             new_ui="$(node tools/hooks.mjs ui-version "$TARGET")"
             if [ "$old_ui" != "$new_ui" ]; then
