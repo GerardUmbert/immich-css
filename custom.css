@@ -122,10 +122,17 @@ main > #asset-grid {
 #account-info-panel > div:first-child {
   background-color: transparent;
 }
+/* the divider lives on the wrapper of "Sign Out" + support link, so the button
+ * itself is a plain pill (same radius on every corner) */
+#account-info-panel > div:last-child {
+  margin-inline: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
 #account-info-panel > div:last-child > a {
   background-color: transparent;
-  margin-block-start: 0;
-  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  margin: 0;
+  border-radius: 9999px;
 }
 
 /* Search filter panel (lib/components/shared-components/search-bar/SearchFilters.svelte):
