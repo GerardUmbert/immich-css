@@ -1,0 +1,210 @@
+/*
+ * Immich custom CSS
+ *
+ * Written against Immich web (immich-app/immich, web/src). Each rule hooks onto
+ * something structural (an id, a data-* attribute, a library class, a link href)
+ * and says which upstream file it depends on, so a break is easy to trace.
+ * Selectors that depend on Tailwind utility classes are the fragile ones and are
+ * all collected under "FRAGILE HOOKS" at the bottom.
+ *
+ * Sections: tokens > colors > timeline > people > places/explore > map > fragile
+ */
+
+/* ------------------------------------------------------------------ tokens */
+:root {
+  --c-radius-day: 15px;
+  --c-radius-thumb: 8px;
+  --c-radius-tile: 12px;
+  --c-zoom: 1.05;
+  --c-ease: 0.2s ease-out;
+
+  --c-glass-bg: rgb(255 255 255 / 0.12);
+  --c-glass-border: rgb(220 220 220 / 0.2);
+  --c-glass-blur: blur(3px);
+  --c-glass-shadow: 0 8px 15px rgb(0 0 0 / 0.15);
+
+  --c-ring: rgb(var(--immich-primary));
+}
+:root.dark {
+  --c-ring: rgb(var(--immich-dark-primary));
+}
+
+/* ------------------------------------------------------------------ colors
+ * No pure white / pure black backgrounds.
+ * --immich-ui-light is a full color in @immich/ui (not an RGB triplet).
+ * --immich-bg / --immich-dark-bg are legacy RGB triplets (web/src/app.css).
+ * --color-white / --color-black are Tailwind theme variables: they retint
+ * bg-white / bg-black (and text-white / text-black) everywhere.
+ */
+:root {
+  --immich-ui-light: rgb(253 250 250);
+  --immich-bg: 253 250 250;
+  --color-white: rgb(253 250 250);
+  --color-black: rgb(20 20 20);
+}
+:root.dark {
+  --immich-ui-light: rgb(20 20 20);
+  --immich-dark-bg: 20 20 20;
+}
+/* web/src/app.css: viewer background */
+body.asset-viewer-open {
+  background-color: rgb(20 20 20);
+}
+
+/* ---------------------------------------------------------------- timeline
+ * [data-image-grid] = one day group (AssetLayout.svelte), rounds its 4 corners.
+ * [data-asset-id]   = one photo slot in that group (AssetLayout.svelte).
+ */
+[data-image-grid] {
+  border-radius: var(--c-radius-day);
+  overflow: clip;
+}
+[data-asset-id] {
+  border-radius: var(--c-radius-thumb);
+  overflow: hidden;
+}
+[data-asset-id] img {
+  transition: transform var(--c-ease);
+}
+@media (hover: hover) {
+  [data-asset-id]:hover img {
+    transform: scale(var(--c-zoom));
+  }
+}
+
+/* ------------------------------------------------------------------ people
+ * #people-card = circle card (routes/(user)/people/PeopleCard.svelte)
+ * Its parent wrapper and the name <input> are siblings/parents in
+ * routes/(user)/people/+page.svelte.
+ */
+#people-card {
+  border-radius: 50%;
+  transition: box-shadow 0.1s ease-out;
+}
+/* ring is a box-shadow, so the card never changes size on hover */
+#people-card:hover {
+  box-shadow: 0 0 0 3px var(--c-ring);
+}
+
+/* the wrapper around card + name: no hover border / background / shadow */
+div:has(> #people-card):hover {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* menu button: top-right corner, frosted glass */
+#people-card a > div:has(> button) {
+  inset-block-start: 0;
+  inset-inline-end: 0;
+}
+#people-card button {
+  color: rgb(200 200 200);
+  background: var(--c-glass-bg);
+  backdrop-filter: var(--c-glass-blur);
+  border: 1px solid var(--c-glass-border);
+  box-shadow: var(--c-glass-shadow);
+}
+#people-card button:hover {
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+/* name: plain text, a box only on hover / focus */
+#people-card + input[type='text'] {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transition: background-color var(--c-ease);
+}
+#people-card + input[type='text']:is(:hover, :focus) {
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+/* explore page: person avatars zoom on hover (a link to /people/<id>) */
+a[href*='/people/']:not(#people-card *) > div:first-child {
+  transition: transform var(--c-ease);
+}
+@media (hover: hover) {
+  a[href*='/people/']:not(#people-card *):hover > div:first-child {
+    transform: scale(var(--c-zoom));
+  }
+}
+
+/* ---------------------------------------------------------- places/explore
+ * Place tiles: a link whose first child is the dimmed image
+ * (routes/(user)/explore/+page.svelte, routes/(user)/places/PlacesCardGroup.svelte).
+ * Name is overlaid on the cover; on hover the image un-dims, zooms, and the
+ * label gets a blurred dark backing.
+ */
+a:has(> div.brightness-75) > div {
+  transition:
+    transform var(--c-ease),
+    filter var(--c-ease);
+}
+a:has(> div.brightness-75) > span {
+  transition:
+    background-color var(--c-ease),
+    backdrop-filter var(--c-ease);
+}
+@media (hover: hover) {
+  a:has(> div.brightness-75):hover > div {
+    transform: scale(var(--c-zoom));
+    filter: none;
+  }
+  a:has(> div.brightness-75):hover > span {
+    backdrop-filter: blur(4px);
+    background: rgb(0 0 0 / 0.2);
+    border-radius: 10px;
+  }
+}
+
+/* --------------------------------------------------------------------- map
+ * Class names are maplibre-gl's own and stable.
+ * Markers are rendered by MarkerLayer in
+ * lib/components/shared-components/map/Map.svelte (cluster = div, photo = img).
+ */
+.maplibregl-canvas {
+  border-radius: var(--c-radius-day);
+}
+/* hides scale + attribution */
+.maplibregl-ctrl-bottom-left,
+.maplibregl-ctrl-bottom-right {
+  display: none;
+}
+.maplibregl-map .maplibregl-ctrl-group {
+  background-color: rgb(255 255 255 / 0.4);
+  backdrop-filter: blur(5px);
+}
+.maplibregl-map .maplibregl-ctrl-group button + button {
+  border-top: none;
+}
+.maplibregl-marker div {
+  background-color: rgb(255 255 255 / 0.4);
+  backdrop-filter: var(--c-glass-blur);
+  color: white;
+  text-shadow: 1px 1px 3px rgb(0 0 0 / 0.8);
+}
+.maplibregl-marker div:hover {
+  background-color: rgb(255 255 255 / 0.5);
+}
+.maplibregl-marker img {
+  border-color: rgb(255 255 255 / 0.1);
+}
+
+/* ---------------------------------------------------------- FRAGILE HOOKS
+ * Depend on Tailwind classes in upstream templates. If something stops
+ * working after an update, look here first.
+ *   - a:has(> div.brightness-75)   places/explore tiles (see section above)
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-asset-id] img,
+  #people-card,
+  #people-card + input[type='text'],
+  a[href*='/people/'] > div:first-child,
+  a:has(> div.brightness-75) > div,
+  a:has(> div.brightness-75) > span {
+    transition: none;
+  }
+}
