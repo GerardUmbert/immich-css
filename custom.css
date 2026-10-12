@@ -165,6 +165,9 @@ div:has(> #asset-grid) {
  * the control bar. Move that space inside the scroller instead. */
 main:has(> #asset-grid) {
   padding-top: 0;
+  /* the person page makes <main> a stacking context (z-0), which put the whole
+   * page, scrubber included, under the control bar's wrapper */
+  z-index: auto;
 }
 main > #asset-grid {
   padding-top: var(--navbar-height);
