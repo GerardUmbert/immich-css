@@ -129,14 +129,18 @@ div:has(> #people-card):hover {
   inset-block-start: 0;
   inset-inline-end: 0;
 }
-#people-card button {
+/* the same glass pill is used for the album cards' menu button
+ * ([data-testid] hook from AlbumCard.svelte, also used by upstream tests) */
+#people-card button,
+[data-testid='context-button-parent'] button {
   color: rgb(200 200 200);
   background: var(--c-glass-bg);
   backdrop-filter: var(--c-glass-blur);
   border: 1px solid var(--c-glass-border);
   box-shadow: var(--c-glass-shadow);
 }
-#people-card button:hover {
+#people-card button:hover,
+[data-testid='context-button-parent'] button:hover {
   color: white;
   backdrop-filter: blur(4px);
 }
