@@ -1,8 +1,11 @@
 name: Check upstream Immich
 
 # Weekly: if Immich has published a stable release newer than the version this CSS
-# was checked against (checkedAgainst in hooks.json), diff the files the CSS
-# depends on and open an issue listing the rule groups to re-check.
+# was checked against (checkedAgainst in hooks.json), check it.
+# If every assumption (anchor) holds and no hooked file went missing, move
+# checkedAgainst and uiVersion to the new release (a commit on main, with HOOKS.md
+# regenerated). Otherwise open an issue listing the rule groups to re-check and
+# leave the versions alone.
 on:
   schedule:
     - cron: '0 7 * * 1' # Mondays 07:00 UTC
@@ -15,12 +18,12 @@ on:
         description: 'Tag to compare to (default: latest stable Immich release)'
         required: false
       dry_run:
-        description: 'Print the report only, do not open an issue'
+        description: 'Print the report only: do not open an issue or move the versions'
         type: boolean
         default: false
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 jobs:
@@ -53,6 +56,7 @@ jobs:
           fi
 
       - name: Build the report
+        id: report
         if: steps.versions.outputs.changed == 'true'
         env:
           BASELINE: ${{ steps.versions.outputs.baseline }}
@@ -61,29 +65,72 @@ jobs:
           node tools/hooks.mjs setup
           git -C immich fetch --depth 1 origin tag "$BASELINE"
           git -C immich fetch --depth 1 origin tag "$TARGET"
+          old_ui="$(node tools/hooks.mjs ui-version "$BASELINE")"
+          new_ui="$(node tools/hooks.mjs ui-version "$TARGET")"
+          echo "new_ui=$new_ui" >> "$GITHUB_OUTPUT"
+
+          status=0
+          node tools/hooks.mjs check "$BASELINE" "$TARGET" > check.txt
+          node tools/hooks.mjs anchors "$TARGET" > anchors.txt || status=$?
+          : > ui.txt
+          if [ "$old_ui" != "$new_ui" ]; then
+            node tools/hooks.mjs check-ui "$old_ui" "$new_ui" > ui.txt
+          fi
+
+          # clean = every assumption holds and no hooked file disappeared
+          clean=true
+          if [ "$status" -ne 0 ] || grep -q 'MISSING' check.txt ui.txt; then
+            clean=false
+          fi
+          echo "clean=$clean" >> "$GITHUB_OUTPUT"
+
           {
-            echo "Immich **$TARGET** is out. This CSS was last checked against **$BASELINE**."
+            if [ "$clean" = true ]; then
+              echo "Immich **$TARGET** is out and every assumption still holds, so \`checkedAgainst\` and \`uiVersion\` move to it (not on a dry run). This CSS was last checked against **$BASELINE**."
+            else
+              echo "Immich **$TARGET** is out and it breaks assumptions or removes files this CSS relies on (last checked against **$BASELINE**)."
+            fi
             echo
             echo '```'
-            node tools/hooks.mjs check "$BASELINE" "$TARGET"
+            cat check.txt
             echo
             echo "--- assumptions the rules make, checked against $TARGET ---"
-            node tools/hooks.mjs anchors "$TARGET" || true
-            old_ui="$(node tools/hooks.mjs ui-version "$BASELINE")"
-            new_ui="$(node tools/hooks.mjs ui-version "$TARGET")"
+            cat anchors.txt
             if [ "$old_ui" != "$new_ui" ]; then
               echo
               echo "--- @immich/ui $old_ui -> $new_ui ---"
-              node tools/hooks.mjs check-ui "$old_ui" "$new_ui"
+              cat ui.txt
             fi
             echo '```'
-            echo
-            echo 'After reviewing the pages in the README checklist, update `checkedAgainst` and `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.'
+            if [ "$clean" != true ]; then
+              echo
+              echo 'After fixing the rules, update `checkedAgainst` and `uiVersion` in `hooks.json` and run `node tools/hooks.mjs docs`.'
+            fi
           } > report.md
           cat report.md >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Move checkedAgainst and uiVersion to the new release
+        if: steps.report.outputs.clean == 'true' && env.DRY_RUN != 'true'
+        env:
+          BASELINE: ${{ steps.versions.outputs.baseline }}
+          TARGET: ${{ steps.versions.outputs.target }}
+          NEW_UI: ${{ steps.report.outputs.new_ui }}
+        run: |
+          # never move backwards, for example when a manual run names an older tag
+          newest="$(printf '%s\n%s\n' "$BASELINE" "$TARGET" | sort -V | tail -1)"
+          if [ "$newest" != "$TARGET" ]; then
+            echo "$TARGET is not newer than $BASELINE: leaving the versions alone."
+            exit 0
+          fi
+          sed -i "s/^  \"checkedAgainst\": \".*\",/  \"checkedAgainst\": \"$TARGET\",/; s/^  \"uiVersion\": \".*\"/  \"uiVersion\": \"$NEW_UI\"/" hooks.json
+          node tools/hooks.mjs docs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Checked against Immich $TARGET: every assumption holds"
+          git push
+
       - name: Open an issue
-        if: steps.versions.outputs.changed == 'true' && env.DRY_RUN != 'true'
+        if: steps.report.outputs.clean == 'false' && env.DRY_RUN != 'true'
         env:
           TARGET: ${{ steps.versions.outputs.target }}
         run: |

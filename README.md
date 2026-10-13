@@ -69,7 +69,13 @@ Each of the other commands lists only the rule groups whose files changed, with 
 
 ### Automatic weekly check
 
-A GitHub Action (`.github/workflows/upstream-check.yml`) runs every Monday. If Immich has published a stable release newer than `checkedAgainst` in `hooks.json`, it runs the checks above and opens an issue titled "Immich <tag> released: review CSS hooks", listing the rule groups to re-check. It opens at most one issue per release and does nothing when you're up to date. You can also run it by hand from the Actions tab (with optional tags to compare, and a dry-run switch that only prints the report). It only compares source files, so it can't see runtime-generated markup; the checklist below still applies.
+A GitHub Action (`.github/workflows/upstream-check.yml`) runs every Monday. If Immich has published a stable release newer than `checkedAgainst` in `hooks.json`, it runs the checks above.
+
+- **Every assumption holds and no hooked file is missing:** it moves `checkedAgainst` and `uiVersion` in `hooks.json` to the new release, regenerates `HOOKS.md`, and commits both to `main`. It never moves the versions backwards.
+- **Something is broken or missing:** it opens an issue titled "Immich <tag> released: review CSS hooks", listing the rule groups to re-check, and leaves the versions alone. It opens at most one issue per release. After fixing the rules, update `checkedAgainst` and `uiVersion` by hand and run `node tools/hooks.mjs docs`.
+- **Nothing new:** it does nothing.
+
+You can also run it by hand from the Actions tab (with optional tags to compare, and a dry-run switch that skips both the issue and the commit). It only compares source files, so it can't see runtime-generated markup, and moving the versions is not a promise that nothing looks off; the checklist below still applies.
 
 ### When something looks off
 
