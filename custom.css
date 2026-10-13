@@ -272,6 +272,13 @@ div:has(> #people-card):hover {
   backdrop-filter: blur(4px);
 }
 
+/* album cards: no date range under the name, the item count stays
+ * (AlbumCard.svelte: the date is the <p> right after the name, the count is
+ * inside a separate <span>) */
+[data-testid='album-card'] [data-testid='album-name'] + p {
+  display: none;
+}
+
 /* name: plain text, a box only on hover / focus */
 #people-card + input[type='text'] {
   background-color: transparent;

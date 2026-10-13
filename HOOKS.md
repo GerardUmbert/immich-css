@@ -158,6 +158,19 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
   - menu button wrapper test id (`lib/components/album-page/AlbumCard.svelte`)
 - **Verified:** source only
 
+## album-card-dates
+
+- **What:** Album cards hide the date range under the name; the item count stays
+- **Why:** The dates are noise; the item count is what matters.
+- **CSS section:** people (menu button), album card dates rule
+- **Selectors:** `[data-testid='album-card'] [data-testid='album-name'] + p`
+- **Immich files** (under `web/src`): `lib/components/album-page/AlbumCard.svelte`
+- **Assumptions checked by `anchors`:**
+  - album card test id (`lib/components/album-page/AlbumCard.svelte`)
+  - the date range is a <p> right after the name <p> (`lib/components/album-page/AlbumCard.svelte`)
+  - the item count is inside a <span>, not a <p> next to the name, so the rule does not hide it (`lib/components/album-page/AlbumCard.svelte`)
+- **Verified:** source only
+
 ## places-tiles (fragile)
 
 - **What:** Places tiles (explore and /places) zoom and un-dim, name overlaid on the cover

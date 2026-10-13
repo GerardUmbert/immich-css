@@ -437,6 +437,39 @@
       ]
     },
     {
+      "id": "album-card-dates",
+      "what": "Album cards hide the date range under the name; the item count stays",
+      "why": "The dates are noise; the item count is what matters.",
+      "css": "people (menu button), album card dates rule",
+      "hooks": [
+        "[data-testid='album-card'] [data-testid='album-name'] + p"
+      ],
+      "upstream": [
+        "lib/components/album-page/AlbumCard.svelte"
+      ],
+      "external": [],
+      "verified": "source only",
+      "fragile": false,
+      "ui": [],
+      "anchors": [
+        {
+          "file": "lib/components/album-page/AlbumCard.svelte",
+          "match": "data-testid=\"album-card\"",
+          "means": "album card test id"
+        },
+        {
+          "file": "lib/components/album-page/AlbumCard.svelte",
+          "match": "data-testid=\"album-name\"[\\s\\S]*?</p>\\s*\\{#if showDateRange[^}]*\\}\\s*<p",
+          "means": "the date range is a <p> right after the name <p>"
+        },
+        {
+          "file": "lib/components/album-page/AlbumCard.svelte",
+          "match": "<span class=\"[^\"]*\" data-testid=\"album-details\">",
+          "means": "the item count is inside a <span>, not a <p> next to the name, so the rule does not hide it"
+        }
+      ]
+    },
+    {
       "id": "places-tiles",
       "what": "Places tiles (explore and /places) zoom and un-dim, name overlaid on the cover",
       "why": "Hover feedback; name overlaid on the cover.",

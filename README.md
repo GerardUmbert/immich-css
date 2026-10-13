@@ -20,7 +20,7 @@ Served by GitHub Pages: the URL never changes and updates go live about a minute
 - **Scrolling.** On the timeline, album, person, partner and shared pages, photos scroll up behind the top bar instead of being cut off below it.
 - **Loading placeholder.** While months of the timeline load, the pulsing blocks look like a real justified gallery (rows of the real row height, cells of mixed widths and rounded corners) instead of identical squares. The color comes from the accent scale, so it follows the theme.
 - **People.** Cards are circles that grow on hover with a ring. The name is plain text with a box only on hover or focus, the menu button is a glass pill in the corner, and the people grid uses fixed-size cards.
-- **Albums.** The menu button on each album card matches the one on people cards.
+- **Albums.** The menu button on each album card matches the one on people cards, and the date range under the album name is hidden (the item count stays).
 - **Places and explore.** Tiles zoom and un-dim on hover, with the name overlaid on the cover. Explore's person avatars zoom too.
 - **Glass surfaces.** The selection bar is translucent and blurred. The account menu is one solid panel with a pill-shaped sign-out button instead of a gray box with white cards.
 - **Sidebar.** The user and admin menus look the same: side padding, fully rounded items, and a scrollbar hidden until you hover the menu.
