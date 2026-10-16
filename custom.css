@@ -279,6 +279,13 @@ div:has(> #people-card):hover {
   display: none;
 }
 
+/* albums without a cover are empty (the server only sets a thumbnail asset when
+ * the album has assets), and CSS cannot match the "0 items" text, so hide the
+ * whole link around any card showing the placeholder image (NoCover.svelte) */
+a:has(> [data-testid='album-card'] img[data-testid='album-image'][src*='no-thumbnail']) {
+  display: none;
+}
+
 /* name: plain text, a box only on hover / focus */
 #people-card + input[type='text'] {
   background-color: transparent;

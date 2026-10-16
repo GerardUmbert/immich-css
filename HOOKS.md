@@ -171,6 +171,19 @@ After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and
   - the item count is inside a <span>, not a <p> next to the name, so the rule does not hide it (`lib/components/album-page/AlbumCard.svelte`)
 - **Verified:** source only
 
+## album-card-empty
+
+- **What:** Empty albums (no cover image) are hidden from the album list
+- **Why:** Albums with 0 items are clutter; CSS cannot match the count text, so the missing cover is the signal.
+- **CSS section:** people (menu button), empty albums rule
+- **Selectors:** `a:has(> [data-testid='album-card'] img[data-testid='album-image'][src*='no-thumbnail'])`
+- **Immich files** (under `web/src`): `lib/components/album-page/AlbumCard.svelte`, `lib/components/album-page/AlbumCardGroup.svelte`, `lib/components/album-page/AlbumCover.svelte`, `lib/components/sharedlinks-page/covers/NoCover.svelte`
+- **Assumptions checked by `anchors`:**
+  - the card is the direct child of its link, which is what gets hidden (`lib/components/album-page/AlbumCardGroup.svelte`)
+  - no thumbnail asset id means the placeholder cover (`lib/components/album-page/AlbumCover.svelte`)
+  - the placeholder image has the album-image test id and a no-thumbnail source (`lib/components/sharedlinks-page/covers/NoCover.svelte`)
+- **Verified:** source only
+
 ## places-tiles (fragile)
 
 - **What:** Places tiles (explore and /places) zoom and un-dim, name overlaid on the cover

@@ -470,6 +470,42 @@
       ]
     },
     {
+      "id": "album-card-empty",
+      "what": "Empty albums (no cover image) are hidden from the album list",
+      "why": "Albums with 0 items are clutter; CSS cannot match the count text, so the missing cover is the signal.",
+      "css": "people (menu button), empty albums rule",
+      "hooks": [
+        "a:has(> [data-testid='album-card'] img[data-testid='album-image'][src*='no-thumbnail'])"
+      ],
+      "upstream": [
+        "lib/components/album-page/AlbumCard.svelte",
+        "lib/components/album-page/AlbumCardGroup.svelte",
+        "lib/components/album-page/AlbumCover.svelte",
+        "lib/components/sharedlinks-page/covers/NoCover.svelte"
+      ],
+      "external": [],
+      "verified": "source only",
+      "fragile": false,
+      "ui": [],
+      "anchors": [
+        {
+          "file": "lib/components/album-page/AlbumCardGroup.svelte",
+          "match": "<a\\s+href=\\{Route\\.viewAlbum\\(album\\)\\}[\\s\\S]*?\\n\\s*>\\s*<AlbumCard",
+          "means": "the card is the direct child of its link, which is what gets hidden"
+        },
+        {
+          "file": "lib/components/album-page/AlbumCover.svelte",
+          "match": "album\\.albumThumbnailAssetId \\?",
+          "means": "no thumbnail asset id means the placeholder cover"
+        },
+        {
+          "file": "lib/components/sharedlinks-page/covers/NoCover.svelte",
+          "match": "data-testid=\"album-image\"[\\s\\S]*?no-thumbnail",
+          "means": "the placeholder image has the album-image test id and a no-thumbnail source"
+        }
+      ]
+    },
+    {
       "id": "places-tiles",
       "what": "Places tiles (explore and /places) zoom and un-dim, name overlaid on the cover",
       "why": "Hover feedback; name overlaid on the cover.",
