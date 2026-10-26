@@ -1,6 +1,6 @@
 # Hook map
 
-Generated from `hooks.json` by `node tools/hooks.mjs docs`. Do not edit by hand. Checked against Immich **v3.3.3** and @immich/ui **0.90.0**.
+Generated from `hooks.json` by `node tools/hooks.mjs docs`. Do not edit by hand. Checked against Immich **v3.3.5** and @immich/ui **0.90.0**.
 
 Each entry says what a group of rules does, why it exists, which selectors it relies on, and which upstream files those selectors come from.
 After an update, run `node tools/hooks.mjs check <oldRef> <newRef>` (Immich) and `node tools/hooks.mjs check-ui <oldVer> <newVer>` (@immich/ui) to list the entries whose files changed.
