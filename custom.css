@@ -141,9 +141,9 @@ ACCENT-END */
 }
 
 /* Selection / control bar (the gray pill at the top when photos are selected):
- * #control-bar is the wrapper in lib/components/shared-components/ControlAppBar.svelte,
+ * #control-bar (data-testid="control-bar" since v3.4.0) is the wrapper in lib/components/shared-components/ControlAppBar.svelte,
  * its <nav> is @immich/ui ControlBar. Frosted glass instead of solid gray. */
-#control-bar > nav {
+:is(#control-bar, [data-testid='control-bar']) > nav {
   background-color: color-mix(in srgb, var(--immich-ui-light-100) 55%, transparent);
   backdrop-filter: blur(12px) saturate(1.4);
   border: 1px solid var(--c-glass-border);
@@ -156,7 +156,7 @@ ACCENT-END */
   --c-scrubber-w: 60px;
 }
 @media (hover: hover) and (pointer: fine) {
-  body:has(#asset-grid) #control-bar {
+  body:has(#asset-grid) :is(#control-bar, [data-testid='control-bar']) {
     padding-inline-end: calc(var(--c-scrubber-w) + 0.5rem);
   }
 }

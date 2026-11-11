@@ -153,7 +153,7 @@
         },
         {
           "file": "lib/components/shared-components/navigation-bar/NavigationBar.svelte",
-          "match": "<div[^>]*>\\s*\\{#if featureFlagsManager\\.value\\.search\\}\\s*<SearchBar",
+          "match": "<div[^>]*>\\s*(?:\\{#if featureFlagsManager\\.value\\.search\\}\\s*)?<SearchBar",
           "means": "search wrapper div directly contains SearchBar"
         },
         {
@@ -169,7 +169,7 @@
       "why": "Replace the solid gray pill.",
       "css": "timeline (Selection / control bar)",
       "hooks": [
-        "#control-bar > nav"
+        "[data-testid='control-bar'] > nav (#control-bar before v3.4.0)"
       ],
       "upstream": [
         "lib/components/shared-components/ControlAppBar.svelte"
@@ -183,7 +183,7 @@
       "anchors": [
         {
           "file": "lib/components/shared-components/ControlAppBar.svelte",
-          "match": "id=\"control-bar\"",
+          "match": "\\sdata-testid=\"control-bar\"",
           "means": "control bar wrapper id"
         },
         {
@@ -204,7 +204,7 @@
         "#asset-grid",
         "main:has(> #asset-grid)",
         "main > #asset-grid",
-        "body:has(#asset-grid) #control-bar (keeps the bar clear of the scrubber strip)"
+        "body:has(#asset-grid) [data-testid='control-bar'] (keeps the bar clear of the scrubber strip)"
       ],
       "upstream": [
         "lib/components/timeline/Timeline.svelte",

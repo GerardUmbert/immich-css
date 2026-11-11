@@ -24,7 +24,7 @@ const map = JSON.parse(readFileSync(join(root, 'hooks.json'), 'utf8'));
 const clone = join(root, 'immich');
 const prefix = map.upstreamRoot;
 
-const git = (...args) => execFileSync('git', ['-C', clone, ...args], { encoding: 'utf8' });
+const git = (...args) => execFileSync('git', ['-C', clone, ...args], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
 const upstreamPath = (file) => `${prefix}/${file}`;
 const existsAt = (ref, file) => {
   try {
