@@ -1,5 +1,5 @@
 {
-  "checkedAgainst": "v3.3.6",
+  "checkedAgainst": "v3.4.1",
   "upstreamRoot": "web/src",
   "hooks": [
     {
